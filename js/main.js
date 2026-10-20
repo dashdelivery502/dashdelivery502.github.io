@@ -1,9 +1,8 @@
-// Importar funciones de Firebase Realtime Database
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase, ref, get, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 // Tu configuración de Firebase
+
 const firebaseConfig = {
     apiKey: "AIzaSyArxtD5VjH4YH1T39dFn0yEyp9NAh42tXM",
     authDomain: "dash-delivery-502.firebaseapp.com",
