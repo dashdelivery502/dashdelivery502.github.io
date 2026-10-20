@@ -896,3 +896,13 @@ async function manejarAplicarCupon() {
         }
     }
 }
+// Exponer las funciones al ámbito global para que los eventos onclick del HTML puedan verlas
+window.manejarAplicarCupon = manejarAplicarCupon;
+window.enviarAWhatsApp = enviarAWhatsApp;
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnCupon = document.getElementById("btn-aplicar-cupon");
+    if (btnCupon) {
+        btnCupon.addEventListener("click", manejarAplicarCupon);
+    }
+});
