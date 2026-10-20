@@ -80,11 +80,9 @@ const infoRestaurantes = {
 
 const menus = {
     "CEVICHES FISH EXPRESS": [
-        { nombre: "ceviche mixto mediano", precio: 50, descripcion: "Mariscos frescos surtidos marinados en zumo de limón con cilantro, cebolla picada y galletas saladas.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
-        { nombre: "ceviche mixto grande", precio: 90, descripcion: "Porción familiar de camarón y pescado con sazón especial de la casa, aguacate y acompañamientos.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
-        { nombre: "ceviche de camaron mediano", precio: 50, descripcion: "Camarones seleccionados curtidos en limón con tomate, cebolla, salsa inglesa y un toque picante.", imagen: "https://www.guatemala.com/fotos/2020/04/ceviche-885x500.jpg" },
-        { nombre: "ceviche de camaron tamaño grande", precio: 90, descripcion: "Camarones seleccionados curtidos en limón con tomate, cebolla, salsa inglesa y un toque picante.", imagen: "https://www.guatemala.com/fotos/2020/04/ceviche-885x500.jpg" },
-        { nombre: "michelada gallo", precio: 35, descripcion: "Cerveza Gallo bien fría preparada con mix especial de limón, sal, tajín y salsas.", imagen: "https://static.wixstatic.com/media/c5644f_c3fd01cfadeb4de0ad37c307e254a2d5~mv2.jpg/v1/fill/w_980,h_1470,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/c5644f_c3fd01cfadeb4de0ad37c307e254a2d5~mv2.jpg" },
+        { nombre: "ceviche mixto", precio: 50, descripcion: "Mariscos frescos surtidos marinados en zumo de limón con cilantro, cebolla picada y galletas saladas.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
+        { nombre: "ceviche mixto grande", precio: 80, descripcion: "Porción familiar de camarón y pescado con sazón especial de la casa, aguacate y acompañamientos.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
+        { nombre: "ceviche de camaron", precio: 80, descripcion: "Camarones seleccionados curtidos en limón con tomate, cebolla, salsa inglesa y un toque picante.", imagen: "https://www.guatemala.com/fotos/2020/04/ceviche-885x500.jpg" },
         { nombre: "Gaseosa en lata", precio: 6, descripcion: "Lata fría salvavidas sabor uva, limon o naranja.", imagen: "https://latorremx.vtexassets.com/arquivos/ids/190394-800-auto?v=638494109579900000&width=800&height=auto&aspect=true", opciones: ["Uva", "Limón", "Naranja"] }
     ],
     "TAQUERO MUCHO": [
@@ -392,44 +390,53 @@ function normalizarTexto(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
+let temporizadorBusqueda = null;
+
 function buscarRestaurante() {
+    // Cancelar cualquier búsqueda pendiente
+    if (temporizadorBusqueda) {
+        clearTimeout(temporizadorBusqueda);
+    }
+
     const inputVal = document.getElementById('buscador-restaurante').value;
     const filtro = normalizarTexto(inputVal.trim());
 
+    // Si el usuario borró todo el texto, restablecer de inmediato sin delay
     if (filtro === "") {
-        if (vistaActual === 'restaurantes') {
-            renderizarTiendas(negociosPorCategoria[categoriaActual] || []);
-        } else if (vistaActual === 'resultados_busqueda') {
-            cambiarVista('panel-inicio');
+        if (vistaActual === 'resultados_busqueda' || vistaActual === 'restaurantes') {
+            volverAPanelPrincipal();
         }
         return;
     }
 
-    let productosEncontrados = [];
+    // Esperar 250ms solo mientras el usuario sigue escribiendo
+    temporizadorBusqueda = setTimeout(() => {
+        let productosEncontrados = [];
 
-    for (let nombreRestaurante in menus) {
-        const listaProductos = menus[nombreRestaurante];
-        
-        listaProductos.forEach((prod, index) => {
-            let coincide = normalizarTexto(prod.nombre).includes(filtro) || 
-                           (prod.descripcion && normalizarTexto(prod.descripcion).includes(filtro)) ||
-                           normalizarTexto(nombreRestaurante).includes(filtro);
+        for (let nombreRestaurante in menus) {
+            const listaProductos = menus[nombreRestaurante];
+            
+            listaProductos.forEach((prod, index) => {
+                let coincide = normalizarTexto(prod.nombre).includes(filtro) || 
+                               (prod.descripcion && normalizarTexto(prod.descripcion).includes(filtro)) ||
+                               normalizarTexto(nombreRestaurante).includes(filtro);
 
-            if (coincide) {
-                productosEncontrados.push({
-                    ...prod,
-                    restaurante: nombreRestaurante,
-                    originalIndex: index
-                });
-            }
-        });
-    }
+                if (coincide) {
+                    productosEncontrados.push({
+                        ...prod,
+                        restaurante: nombreRestaurante,
+                        originalIndex: index
+                    });
+                }
+            });
+        }
 
-    categoriaActual = 'resultados_busqueda';
-    document.getElementById('titulo-categoria-activa').textContent = `Resultados para: "${inputVal}"`;
-    cambiarVista('restaurantes');
+        categoriaActual = 'resultados_busqueda';
+        document.getElementById('titulo-categoria-activa').textContent = `Resultados para: "${inputVal}"`;
+        cambiarVista('restaurantes');
 
-    renderizarProductosBuscados(productosEncontrados);
+        renderizarProductosBuscados(productosEncontrados);
+    }, 250);
 }
 
 function renderizarProductosBuscados(productos) {
