@@ -1,3 +1,22 @@
+// Importar funciones de Firebase Realtime Database
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+// Tu configuración de Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyArxtD5VjH4YH1T39dFn0yEyp9NAh42tXM",
+    authDomain: "dash-delivery-502.firebaseapp.com",
+    projectId: "dash-delivery-502",
+    storageBucket: "dash-delivery-502.firebasestorage.app",
+    messagingSenderId: "145432661248",
+    appId: "1:145432661248:web:2b811789ce6415995877e5",
+    measurementId: "G-9GX5BS52R2"
+};
+
+// Inicializar Realtime Database
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 let carrito = [];
 let restauranteActual = "";
 let categoriaActual = "";
@@ -229,7 +248,7 @@ const menus = {
         { nombre: "Vaso Diamante", precio: 10, descripcion: "hermoso y resistente, capacidad de hasta 650ml.", imagen: "img/vasop.webp" }
     ],
     "MOTOS HONDA": [
-        { nombre: "XBLADE 160 mod2026", precio: 17890, descripcion: "mecanica,gasolina/carburada, diseño deportivo y baja altura", etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://th.bing.com/th/id/R.ce16a0823a94576db70b92c330f4397a?rik=6rlDgteiVsdpHg&pid=ImgRaw&r=0" },
+        { nombre: "XBLADE 160 mod2026", precio: 17890, descripcion: "mecanica,gasolina/carburada, diseño deportivo y baja altura", etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://th.bing.net/th/id/R.ce16a0823a94576db70b92c330f4397a?rik=6rlDgteiVsdpHg&pid=ImgRaw&r=0" },
         { nombre: "XR190L 2026", precio: 28490, descripcion: "doble proposito versatil, tablero digital y puerto usb",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://motos.honda.com.ec/uploads/galeria/XR190L_R.jpg" },
         { nombre: "XR150L 2026", precio: 16290, descripcion: "doble proposito versatil y resistente para uso diario",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://tse2.mm.bing.net/th/id/OIP.3jWa1kxtLKUUg0DXYeHO5QHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
         { nombre: "CRF300 RALLY 2026", precio: 68190, descripcion: "Trail ligera y de aventura 27.5 CV y 26.6 Nm",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://tse1.mm.bing.net/th/id/OIP.1e4M1aCoGjk0G-9vvNWuQgAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
@@ -261,7 +280,6 @@ const menus = {
     ]
 };
 
-// Persistencia en LocalStorage
 function guardarCarrito() {
     localStorage.setItem('dash_carrito_502', JSON.stringify(carrito));
 }
@@ -278,7 +296,6 @@ function cargarCarritoGuardado() {
     }
 }
 
-// Navegación con Historial Retroceso
 function cambiarVista(nuevaVista, push = true) {
     const panelPrincipal = document.getElementById('seccion-panel-principal');
     const seccionRestaurantes = document.getElementById('seccion-restaurantes');
@@ -371,12 +388,10 @@ function volverANegocios() {
     cambiarVista('restaurantes');
 }
 
-// Función auxiliar para quitar tildes y acentos (Búsqueda más flexible)
 function normalizarTexto(texto) {
     return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Buscador Inteligente de Productos Directos
 function buscarRestaurante() {
     const inputVal = document.getElementById('buscador-restaurante').value;
     const filtro = normalizarTexto(inputVal.trim());
@@ -479,12 +494,10 @@ function agregarDesdeBusqueda(nombreRestaurante, nombreProd, precio) {
     agregarAlCarritoDirecto(nombreFinal, precio);
 }
 
-// Renderizado del Menú con la imagen superior del negocio y soporte de productos
 function abrirMenu(nombreRestaurante) {
     restauranteActual = nombreRestaurante;
     document.getElementById('titulo-restaurante').textContent = nombreRestaurante;
 
-    // Buscar la imagen correspondiente al negocio para mostrarla arriba
     let imgNegocioUrl = "";
     for (let cat in negociosPorCategoria) {
         const tiendaEncontrada = negociosPorCategoria[cat].find(t => t.nombre === nombreRestaurante);
@@ -510,7 +523,6 @@ function abrirMenu(nombreRestaurante) {
     const productos = menus[nombreRestaurante] || [];
     productos.forEach((prod, index) => {
         const descHtml = prod.descripcion ? `<div class="producto-desc">${prod.descripcion}</div>` : '';
-        
         const etiquetaProdHtml = prod.etiqueta ? `<span class="badge-pedido" style="margin-bottom: 4px; display: inline-block;">${prod.etiqueta}</span><br>` : '';
         
         let opcionesHtml = '';
@@ -661,7 +673,8 @@ function verDetalleCarrito() {
     }
 }
 
-function enviarAWhatsApp() {
+// FUNCIÓN DE ENVÍO CON GUARDADO AUTOMÁTICO EN REALTIME DATABASE
+async function enviarAWhatsApp() {
     const nombreInput = document.getElementById('cliente-nombre');
     const direccionInput = document.getElementById('cliente-direccion');
     const referenciaInput = document.getElementById('cliente-referencia');
@@ -694,6 +707,25 @@ function enviarAWhatsApp() {
     const restNombre = carrito[0].restaurante;
     let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
 
+    // 1. GUARDAR PEDIDO EN REALTIME DATABASE
+    try {
+        const pedidosRef = ref(db, 'pedidos');
+        await push(pedidosRef, {
+            restaurante: restNombre,
+            clienteNombre: nombre,
+            clienteDireccion: direccion,
+            clienteReferencia: referencia || "Sin referencia",
+            productos: carrito,
+            subtotal: total,
+            fechaPedido: new Date().toISOString(),
+            estado: "Pendiente"
+        });
+        console.log("Pedido guardado en Realtime Database con éxito");
+    } catch (error) {
+        console.error("Error al guardar en la base de datos: ", error);
+    }
+
+    // 2. CONSTRUIR MENSAJE PARA WHATSAPP
     let mensaje = `*¡Nuevo Pedido en Dash Delivery 502!* \n\n`;
     mensaje += ` *Negocio:* ${restNombre}\n`;
     mensaje += ` *Cliente:* ${nombre}\n`;
@@ -714,6 +746,7 @@ function enviarAWhatsApp() {
 
     mensaje += `\n¡Quedo a la espera de la confirmación de mi pedido!`;
 
+    // 3. LIMPIAR CARRITO Y ABRIR WHATSAPP
     carrito = [];
     localStorage.removeItem('dash_carrito_502');
     actualizarTotal();
@@ -721,6 +754,20 @@ function enviarAWhatsApp() {
     const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
     window.open(urlWhatsApp, '_blank');
 }
+
+// Hacer globales las funciones que usa el HTML en los eventos onclick
+window.irACategoria = irACategoria;
+window.volverAPanelPrincipal = volverAPanelPrincipal;
+window.volverANegocios = volverANegocios;
+window.buscarRestaurante = buscarRestaurante;
+window.abrirMenu = abrirMenu;
+window.agregarConOpcion = agregarConOpcion;
+window.agregarDesdeBusqueda = agregarDesdeBusqueda;
+window.cambiarCantidad = cambiarCantidad;
+window.eliminarDelCarrito = eliminarDelCarrito;
+window.abrirModalCarrito = abrirModalCarrito;
+window.cerrarModalCarrito = cerrarModalCarrito;
+window.enviarAWhatsApp = enviarAWhatsApp;
 
 window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
