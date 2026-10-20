@@ -747,27 +747,37 @@ async function enviarAWhatsApp() {
         console.error("Error al guardar en la base de datos: ", error);
     }
 
-    // 2. CONSTRUIR MENSAJE PARA WHATSAPP
+  // 2. CONSTRUIR MENSAJE PARA WHATSAPP
+    let subtotal = typeof total !== 'undefined' ? total : carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    let descuento = typeof descuentoAplicado !== 'undefined' ? descuentoAplicado : 0;
+    let totalFinal = subtotal - descuento;
+
     let mensaje = `*¡Nuevo Pedido en Dash Delivery 502!* \n\n`;
     mensaje += ` *Negocio:* ${restNombre}\n`;
     mensaje += ` *Cliente:* ${nombre}\n`;
     mensaje += ` *Dirección:* ${direccion}\n`;
-    if (referencia) {
+    if (referencia) {    
         mensaje += ` *Referencia:* ${referencia}\n`;
     }
     mensaje += `\n*Detalle del Pedido:*\n`;
 
     carrito.forEach(item => {
-        mensaje += `• ${item.cantidad}x ${item.nombre} (Q${item.precio * item.cantidad}.00)\n`;
+        mensaje += `• ${item.cantidad}x ${item.nombre} (Q${(item.precio * item.cantidad).toFixed(2)})\n`;
     });
 
-    mensaje += `\n *Subtotal Productos:* Q${total}.00\n`;
+    // Subtotal y Descuento por Cupón
+    mensaje += `\n *Subtotal Productos:* Q${subtotal}.00\n`;
     
+    if (descuento > 0) {
+        mensaje += ` *Descuento (Cupón):* -Q${descuento}.00\n`;
+        mensaje += ` *Total Final con Descuento:* Q${totalFinal}.00\n`;
+    }
+
+    // Información de Envío
     const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
     mensaje += esGratis ? ` *Envío:* GRATIS\n` : ` *Envío:* Pendiente de calcular según ubicación\n`;
 
-    mensaje += `\n¡Quedo a la espera de la confirmación de mi pedido!`;
-
+    mensaje += `\n¡Quedo a la espera!`;
     // 3. LIMPIAR CARRITO Y ABRIR WHATSAPP
     carrito = [];
     localStorage.removeItem('dash_carrito_502');
@@ -798,8 +808,8 @@ window.addEventListener('DOMContentLoaded', () => {
 // Variable global para controlar el descuento aplicado
 let descuentoAplicado = 0;
 
-// Función para validar y aplicar el cupón de descuento
-async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauranteActual, telefonoCliente) {
+// Función para validar y aplicar el cupón de descuento en Firebase
+async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauranteActual) {
     const user = auth.currentUser;
 
     if (!user) {
@@ -824,8 +834,8 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
         return 0;
     }
 
-    // 2. Validar restaurante afiliado
-    if (cupon.restaurante.toLowerCase() !== restauranteActual.toLowerCase()) {
+    // 2. Validar restaurante afiliado (asegurando comparación exacta en mayúsculas)
+    if (cupon.restaurante.trim().toUpperCase() !== restauranteActual.trim().toUpperCase()) {
         alert(`Este cupón solo es válido para pedidos en ${cupon.restaurante}.`);
         return 0;
     }
@@ -854,24 +864,23 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
     alert("¡Cupón aplicado exitosamente! Se descontaron Q5.00 de tu total.");
     return cupon.descuento;
 }
+
+// Función puente conectada al botón "Aplicar"
 async function manejarAplicarCupon() {
     const inputCodigo = document.getElementById("input-cupon").value;
     
-    // 1. Calcular el subtotal sumando los elementos del carrito
+    // Calculamos el subtotal actual de los productos en el carrito
     let subtotalActual = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     
-    // 2. Obtener el nombre del restaurante del primer producto en el carrito
+    // Detectamos el restaurante del primer producto del carrito
     let restauranteActual = carrito.length > 0 ? carrito[0].restaurante : ""; 
-    
-    const telefonoClienteInput = document.getElementById("cliente-telefono") ? document.getElementById("cliente-telefono").value : "";
 
-    // 3. Validar cupón
-    const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual, telefonoClienteInput);
+    const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual);
 
     if (descuento > 0) {
         descuentoAplicado = descuento;
         
-        // Bloquear los controles para no volver a aplicar
+        // Bloquear los controles del cupón
         document.getElementById("input-cupon").disabled = true;
         const btnAplicar = document.getElementById("btn-aplicar-cupon");
         btnAplicar.disabled = true;
@@ -879,20 +888,11 @@ async function manejarAplicarCupon() {
         btnAplicar.style.backgroundColor = "#28a745";
         btnAplicar.style.color = "#fff";
 
-        // 4. Actualizar el total visible en el carrito o modal
-        const totalActualizado = subtotalActual - descuento;
-        
-        // Si tienes un elemento de texto donde muestras el total, lo actualizamos aquí:
-        const elementoTotal = document.getElementById("carrito-total") || document.querySelector(".total-carrito");
-        if (elementoTotal) {
-            elementoTotal.innerText = `Total: Q${totalActualizado}.00 (Q${descuento}.00 desc. aplicado)`;
-        }
-
-        // Si usas renderizarCarrito() o actualizarCarrito(), lo ejecutamos:
-        if (typeof renderizarCarrito === "function") {
-            renderizarCarrito();
-        } else if (typeof mostrarCarrito === "function") {
-            mostrarCarrito();
+        // Mostrar el desglose actualizado en pantalla
+        let totalFinal = subtotalActual - descuentoAplicado;
+        const cajaResumen = document.getElementById("resumen-cupon-box");
+        if (cajaResumen) {
+            cajaResumen.innerHTML = `Subtotal: Q${subtotalActual}.00 <br>Descuento: -Q${descuentoAplicado}.00 <br><span style="color: #28a745;">Total Final: Q${totalFinal}.00</span>`;
         }
     }
 }

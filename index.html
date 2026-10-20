@@ -144,11 +144,15 @@
                 <input type="text" id="cliente-direccion" placeholder="Dirección de Entrega (Obligatorio)">
                 <input type="text" id="cliente-referencia" placeholder="Referencia (ej. Portón rojo)">
                
+                <!-- Resumen de Totales y Cupón -->
+                <div id="resumen-cupon-box" style="margin: 10px 0; font-size: 15px; font-weight: bold; color: #333;"></div>
+
                 <!-- Sección de Cupón de Descuento -->
-<div class="cupon-box" style="margin: 15px 0;">
-    <input type="text" id="input-cupon" placeholder="¿Tienes un cupón?" style="padding: 8px; width: 60%;">
-    <button type="button" id="btn-aplicar-cupon" style="padding: 8px;" onclick="manejarAplicarCupon()">Aplicar</button>
-</div>
+                <div class="cupon-box" style="margin: 15px 0;">
+                    <input type="text" id="input-cupon" placeholder="Ej. PROMO1" style="padding: 8px; width: 60%;">
+                    <button type="button" id="btn-aplicar-cupon" style="padding: 8px;" onclick="manejarAplicarCupon()">Aplicar</button>
+                </div>
+
                 <button id="btn-whatsapp" class="btn-pedir-whatsapp" onclick="enviarAWhatsApp()">
                      Confirmar Pedido por WhatsApp
                 </button>
