@@ -854,26 +854,41 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
     alert("¡Cupón aplicado exitosamente! Se descontaron Q5.00 de tu total.");
     return cupon.descuento;
 }
-
-// Función puente para conectar el botón HTML con la interfaz
 async function manejarAplicarCupon() {
     const inputCodigo = document.getElementById("input-cupon").value;
     
-    // Obtenemos el subtotal calculado de tu carrito actual
+    // 1. Calcular el subtotal sumando los elementos del carrito
     let subtotalActual = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    
+    // 2. Obtener el nombre del restaurante del primer producto en el carrito
+    let restauranteActual = carrito.length > 0 ? carrito[0].restaurante : ""; 
+    
     const telefonoClienteInput = document.getElementById("cliente-telefono") ? document.getElementById("cliente-telefono").value : "";
 
+    // 3. Validar cupón
     const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual, telefonoClienteInput);
 
     if (descuento > 0) {
         descuentoAplicado = descuento;
         
-        // Bloquear el botón e input para evitar re-uso en la misma sesión
+        // Bloquear los controles para no volver a aplicar
         document.getElementById("input-cupon").disabled = true;
-        document.getElementById("btn-aplicar-cupon").disabled = true;
-        document.getElementById("btn-aplicar-cupon").innerText = "Aplicado ✓";
+        const btnAplicar = document.getElementById("btn-aplicar-cupon");
+        btnAplicar.disabled = true;
+        btnAplicar.innerText = "Aplicado ✓";
+        btnAplicar.style.backgroundColor = "#28a745";
+        btnAplicar.style.color = "#fff";
 
-        // Si tienes una función que actualiza la vista o el resumen del carrito, la volvemos a llamar:
+        // 4. Actualizar el total visible en el carrito o modal
+        const totalActualizado = subtotalActual - descuento;
+        
+        // Si tienes un elemento de texto donde muestras el total, lo actualizamos aquí:
+        const elementoTotal = document.getElementById("carrito-total") || document.querySelector(".total-carrito");
+        if (elementoTotal) {
+            elementoTotal.innerText = `Total: Q${totalActualizado}.00 (Q${descuento}.00 desc. aplicado)`;
+        }
+
+        // Si usas renderizarCarrito() o actualizarCarrito(), lo ejecutamos:
         if (typeof renderizarCarrito === "function") {
             renderizarCarrito();
         } else if (typeof mostrarCarrito === "function") {
