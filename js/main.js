@@ -1,6 +1,7 @@
 // Importar funciones de Firebase Realtime Database
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -16,6 +17,20 @@ const firebaseConfig = {
 // Inicializar Realtime Database
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+// Inicializar Auth
+const auth = getAuth(app);
+
+// Iniciar sesión anónima automáticamente
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Sesión anónima activa con UID:", user.uid);
+  } else {
+    signInAnonymously(auth)
+      .then(() => console.log("Nueva sesión anónima iniciada"))
+      .catch((error) => console.error("Error en Auth:", error));
+  }
+});
 
 let carrito = [];
 let restauranteActual = "";
@@ -780,3 +795,78 @@ window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
     cargarCarritoGuardado();
 });
+// Función para validar y aplicar el cupón de descuento
+async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauranteActual, telefonoCliente) {
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Iniciando sesión de invitado, por favor intenta de nuevo en unos segundos.");
+        return 0;
+    }
+
+    const codigoLimpio = codigoIngresado.trim().toUpperCase();
+
+    // 1. Obtener datos del cupón desde Firebase
+    const snapshotCupon = await get(ref(db, `cupones/${codigoLimpio}`));
+    
+    if (!snapshotCupon.exists()) {
+        alert("El código ingresado no es válido o no existe.");
+        return 0;
+    }
+
+    const cupon = snapshotCupon.val();
+
+    if (!cupon.activo) {
+        alert("Este cupón ya no está activo.");
+        return 0;
+    }
+
+    // 2. Validar restaurante afiliado
+    if (cupon.restaurante.toLowerCase() !== restauranteActual.toLowerCase()) {
+        alert(`Este cupón solo es válido para pedidos en ${cupon.restaurante}.`);
+        return 0;
+    }
+
+    // 3. Validar Fecha de Expiración
+    const hoy = new Date();
+    const fechaLimite = new Date(cupon.fechaExpiracion + "T23:59:59");
+    if (hoy > fechaLimite) {
+        alert("Este cupón de bienvenida ya ha expirado.");
+        return 0;
+    }
+
+    // 4. Validar Mínimo de Compra (Q50.00)
+    if (subtotalCarrito < cupon.minimoCompra) {
+        alert(`El consumo mínimo para aplicar este cupón es de Q${cupon.minimoCompra}.00`);
+        return 0;
+    }
+
+    // 5. Validar si la cuenta del dispositivo ya usó el cupón
+    const snapshotUser = await get(ref(db, `usuarios/${user.uid}`));
+    if (snapshotUser.exists() && snapshotUser.val().primerPedidoRealizado) {
+        alert("Este cupón solo puede ser utilizado en tu primer pedido.");
+        return 0;
+    }
+
+    alert("¡Cupón aplicado exitosamente! Se descontaron Q5.00 de tu total.");
+    return cupon.descuento; // Retorna 5.00 para descontarlo del total
+}
+// Función puente para conectar el botón HTML con la validación
+async function manejarAplicarCupon() {
+    const inputCodigo = document.getElementById("input-cupon").value;
+    
+    // Aquí puedes cambiar "subtotal" por la variable exacta que usas en tu código para calcular el costo de los productos
+    const subtotalActual = typeof subtotal !== 'undefined' ? subtotal : 50; 
+    const telefonoClienteInput = document.getElementById("cliente-telefono") ? document.getElementById("cliente-telefono").value : "";
+
+    // Llamamos a la función de validación
+    const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual, telefonoClienteInput);
+
+    if (descuento > 0) {
+        // Aquí puedes restar el descuento de tu total a pagar visualmente
+        console.log("Descuento aplicado con éxito de: Q" + descuento);
+        // Opcional: Deshabilitar el input para que no lo usen dos veces seguidas
+        document.getElementById("input-cupon").disabled = true;
+        document.getElementById("btn-aplicar-cupon").disabled = true;
+    }
+}

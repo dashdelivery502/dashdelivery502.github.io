@@ -143,9 +143,14 @@
                 <input type="text" id="cliente-nombre" placeholder="Tu Nombre (Obligatorio)">
                 <input type="text" id="cliente-direccion" placeholder="Dirección de Entrega (Obligatorio)">
                 <input type="text" id="cliente-referencia" placeholder="Referencia (ej. Portón rojo)">
-
+               
+                <!-- Sección de Cupón de Descuento -->
+<div class="cupon-box" style="margin: 15px 0;">
+    <input type="text" id="input-cupon" placeholder="¿Tienes un cupón?" style="padding: 8px; width: 60%;">
+    <button type="button" id="btn-aplicar-cupon" style="padding: 8px;" onclick="manejarAplicarCupon()">Aplicar</button>
+</div>
                 <button id="btn-whatsapp" class="btn-pedir-whatsapp" onclick="enviarAWhatsApp()">
-                    📲 Confirmar Pedido por WhatsApp
+                     Confirmar Pedido por WhatsApp
                 </button>
             </div>
         </div>
