@@ -795,6 +795,9 @@ window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
     cargarCarritoGuardado();
 });
+// Variable global para controlar el descuento aplicado
+let descuentoAplicado = 0;
+
 // Función para validar y aplicar el cupón de descuento
 async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauranteActual, telefonoCliente) {
     const user = auth.currentUser;
@@ -849,24 +852,32 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
     }
 
     alert("¡Cupón aplicado exitosamente! Se descontaron Q5.00 de tu total.");
-    return cupon.descuento; // Retorna 5.00 para descontarlo del total
+    return cupon.descuento;
 }
-// Función puente para conectar el botón HTML con la validación
+
+// Función puente para conectar el botón HTML con la interfaz
 async function manejarAplicarCupon() {
     const inputCodigo = document.getElementById("input-cupon").value;
     
-    // Aquí puedes cambiar "subtotal" por la variable exacta que usas en tu código para calcular el costo de los productos
-    const subtotalActual = typeof subtotal !== 'undefined' ? subtotal : 50; 
+    // Obtenemos el subtotal calculado de tu carrito actual
+    let subtotalActual = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     const telefonoClienteInput = document.getElementById("cliente-telefono") ? document.getElementById("cliente-telefono").value : "";
 
-    // Llamamos a la función de validación
     const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual, telefonoClienteInput);
 
     if (descuento > 0) {
-        // Aquí puedes restar el descuento de tu total a pagar visualmente
-        console.log("Descuento aplicado con éxito de: Q" + descuento);
-        // Opcional: Deshabilitar el input para que no lo usen dos veces seguidas
+        descuentoAplicado = descuento;
+        
+        // Bloquear el botón e input para evitar re-uso en la misma sesión
         document.getElementById("input-cupon").disabled = true;
         document.getElementById("btn-aplicar-cupon").disabled = true;
+        document.getElementById("btn-aplicar-cupon").innerText = "Aplicado ✓";
+
+        // Si tienes una función que actualiza la vista o el resumen del carrito, la volvemos a llamar:
+        if (typeof renderizarCarrito === "function") {
+            renderizarCarrito();
+        } else if (typeof mostrarCarrito === "function") {
+            mostrarCarrito();
+        }
     }
 }
