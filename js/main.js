@@ -120,6 +120,7 @@ const menus = {
         { nombre: "Piña Colada", precio: 30, descripcion: "coctel dulce y refrescante elaborada con jugo de piña principalmente", imagen: "img/p-colada.webp" },
         { nombre: "Cafe Helado", precio: 30, descripcion: "bebida refrescante con hielo hecha a base de cafe", imagen: "img/cafe-helado.webp" },
         { nombre: "Michelada", precio: 35, descripcion: "mezcla de jugos vegetales y cerveza", imagen: "img/michelada.webp" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día (Horchata, Jamaica o Tamarindo).", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Horchata", "Jamaica", "Tamarindo"] }
     ],
     "POLLO DELY ROSY": [
@@ -129,6 +130,7 @@ const menus = {
         { nombre: "1 Papa", precio: 7, descripcion: "Complemento extra individual", imagen: "https://static.vecteezy.com/system/resources/previews/059/482/403/non_2x/crispy-golden-french-fries-served-in-a-red-container-for-a-delicious-fast-food-snack-french-fries-food-fast-food-snack-isolated-lunch-take-out-free-png.png" },
         { nombre: "1 Ensalada", precio: 7, descripcion: "Complemento extra individual.", imagen: "https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_150,q_auto:low,fl_lossy,dpr_2.0,c_fill,f_auto,h_150/bfubmka0kj0j23n1ndnx" },
         { nombre: "Papas Locas", precio: 15, descripcion: "Papas fritas con salsa y mayonesa", imagen: "https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnibWid62HSACJCV9jl2pbaLD0xj-XybCaS6AR_GCix25V9xBbEWNMVPOjuIXDH10_7XAyAlFa5Au3GsMv27ZjVVArSq7hwomRSM-j1Bt37dUKXuc82mXF7h_lQOq_O_POXPtKvg?key=ls6I_YEY3fzKA7j1A3GHLg" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "Gaseosa en lata", precio: 8, descripcion: "Bebida gaseosa Coca Cola en lata.", imagen: "img/cocacola.webp" }
     ],
     "LA SICILIANA": [
@@ -137,19 +139,21 @@ const menus = {
         { nombre: "Pizza Hawaiana", precio: 60, descripcion: "Combinación clásica de piña caramelizada en almíbar, trozos de jamón premium y queso derretido.", imagen: "img/hawai-sici.webp" },
         { nombre: "Pizza Grande Extra Queso", precio: 55, descripcion: "Pizza familiar de 8 porciones bañada en doble capa de queso mozzarella fundido.", imagen: "img/extra-queso-sici.webp" },
         { nombre: "2 Pizzas Grandes (+ 8 Canelitas)", precio: 90, descripcion: "Super combo de 2 pizzas familiares a elección más 8 deliciosos palitroques dulces con canela.", imagen: "img/combo1-sici.webp" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp" }
     ],
     "POLLO GRANJERO": [
         { nombre: "Menu 1 pieza", precio: 25, descripcion: "1 pieza (no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
         { nombre: "Menu 2 piezas", precio: 35, descripcion: "2 piezas(no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
-        { nombre: "Menu 3 piezas", precio: 42, descripcion: "3 piezas(no pechuga) + 1 papa + 1 ensalada ", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
+        { nombre: "Menu 3 piezas", precio: 45, descripcion: "3 piezas(no pechuga) + 1 papa + 1 ensalada ", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
         { nombre: "Combo 5 piezas", precio: 85, descripcion: "5 piezas(no pechuga) + 2 papas + 2 ensaladas", imagen: "https://cdn.telediario.cr/uploads/media/2026/03/19/cadena-cierra-sus-operaciones-en.jpg" },
         { nombre: "Combo 8 piezas", precio: 120, descripcion: "8 piezas(no pechuga)+3 papas +3 ensaladas", imagen: "https://images.rappi.co.cr/restaurants_background/7367_1654882378124.png?e=webp&d=800x800&q=70" },
         { nombre: "Hamburguesa", precio: 22, descripcion: "Hamburguesa doble con queso", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/hamburguesa-doble-torta.png" },
         { nombre: "Porcion de papas", precio: 8, descripcion: "papas fritas normales", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/papa-frita-pequena.png" },
         { nombre: "Ensalada", precio: 8, descripcion: "ensalada de repollo individual", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/ensalada-de-repollo.png" },
-        { nombre: "Pastelito", precio: 8, descripcion: "unidad de pastelito relleno con manzana", imagen: "https://tse1.mm.bing.net/th/id/OIP.x6D1n4exd2z5Eah7-kNryQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
+        { nombre: "Pastelito", precio: 7, descripcion: "unidad de pastelito relleno con manzana", imagen: "https://tse1.mm.bing.net/th/id/OIP.x6D1n4exd2z5Eah7-kNryQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
         { nombre: "Gaseosa en lata", precio: 6, descripcion: "gaseosa salvavidas sabor limon,uva o naranja", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["Limón", "Uva", "Naranja"] },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp" }
     ],
     "DOMINOS EXPRESS": [
@@ -159,6 +163,7 @@ const menus = {
         { nombre: "Pizzerola", precio: 20, descripcion: "queso derretido y especias italianas.", imagen: "img/pizzerola-domi.webp" },
         { nombre: "Mega Empanada", precio: 20, descripcion: "Empanada gigante frita rellena de carne picada sazonada con vegetales.", imagen: "img/empanada-domi.webp" },
         { nombre: "Gaseosa Salvavidas en Lata", precio: 6, descripcion: "gaseosa salvavidas del sabor que prefieras", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["limon", "uva", "naranja"] },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "Pepsi 1 Litro", precio: 8, descripcion: "Bebida familiar refrescante Pepsi de 1 L.", imagen: "img/pepsi.webp" }
     ],
     "CARNITAS EL GORDO": [
@@ -167,6 +172,7 @@ const menus = {
         { nombre: "Porcion de Mushque", precio: 15,etiqueta: "disponible muy pronto", descripcion: "Delicioso chicharrón picadito en pasta con especias regionales tradicionales.", imagen: "img/mushque.webp" },
         { nombre: "Docena de Longaniza", precio: 12,etiqueta: "disponible muy pronto", descripcion: "12 longanizas asadas con hierbas aromáticas y ajo listas para disfrutar.", imagen: "img/longas.webp" },
         { nombre: "1 litro de Pepsi", precio: 8,etiqueta: "disponible muy pronto", descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "gaseosa en lata", precio: 6,etiqueta: "disponible muy pronto", descripcion: "Lata personal de gaseosa salvavidas surtida.", imagen: "https://salvavidasenlinea.com.gt/wp-content/uploads/2025/01/Foto_AppTuHogar_1500px_BLUE-800x800.jpg", opciones: ["Uva", "Limón", "Naranja", "Cola"] }
     ], 
     "LA NEVERIA": [
@@ -208,6 +214,7 @@ const menus = {
         { nombre: "Shampoo Tammy Aguacate", precio: 10, descripcion: "shampoo tammy de 500ml da brillo y aroma agradable", imagen: "img/tammy-aguacate.webp" },
         { nombre: "Axe Dark Temperation", precio: 23, descripcion: "desodorante en aerosol de 150ml", imagen: "img/axe-dark.webp" },
         { nombre: "Axe Fragancia+Frescura", precio: 23, descripcion: "desodorante en aerosol de 150ml", imagen: "img/axe-frescura.webp" },
+        { nombre: "Pomada Lecleire", precio: 10, descripcion: "cuida tu piel y dejala con un aroma encantador", imagen: "img/pomada-lecleire.webp" },
         { nombre: "Ponds Clarant B3", precio: 22, descripcion: "crema antimanchas e hidratante, unifica el tono de piel y desvanece manchas oscuras", imagen: "img/ponds-clarant.webp" }
     ],
     "VERDURAS Y FRUTAS JENNYFER": [
@@ -250,6 +257,7 @@ const menus = {
         { nombre: "Cafe Musun Suave 260g", precio: 68, descripcion: "estudio.", imagen: "img/musun.grande.webp" },
         { nombre: "Cafe Musun suave 46g", precio: 18, descripcion: "aroma penetrante", imagen: "img/musun-pequeño.webp" },
         { nombre: "Pan Blanco La mejor", precio: 14, descripcion: "rápida cocción y gran sabor.", imagen: "img/lamejor.webp" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "Aceite Patrona 175ml", precio: 5, descripcion: "alimentos diarios.", imagen: "img/patrona.webp" }
     ],
     "TOTALPLAST": [
