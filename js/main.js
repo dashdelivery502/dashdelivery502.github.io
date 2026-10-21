@@ -729,6 +729,8 @@ async function enviarAWhatsApp() {
     const nombre = nombreInput.value.trim();
     const direccion = direccionInput.value.trim();
     const referencia = referenciaInput.value.trim();
+    const formaPagoSelect = document.getElementById('forma-pago');
+    const formaPago = formaPagoSelect ? formaPagoSelect.value : "Efectivo contra entrega";
 
     let hayError = false;
 
@@ -783,6 +785,7 @@ async function enviarAWhatsApp() {
     mensaje += ` *Dirección:* ${direccion}\n`;
     if (referencia) {    
         mensaje += ` *Referencia:* ${referencia}\n`;
+        mensaje += ` 💳 *Forma de Pago:* ${formaPago}\n`;
     }
     mensaje += `\n*Detalle del Pedido:*\n`;
 

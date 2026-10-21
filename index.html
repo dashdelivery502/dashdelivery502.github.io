@@ -153,7 +153,15 @@
                     <input type="text" id="input-cupon" placeholder="Ej. PROMO1" style="padding: 8px; width: 60%;">
                     <button type="button" id="btn-aplicar-cupon" style="padding: 8px;" onclick="manejarAplicarCupon()">Aplicar</button>
                 </div>
-
+                <!-- Selector Simplificado de Forma de Pago -->
+<div class="form-group" style="margin: 12px 0;">
+    <label style="font-size: 0.85rem; font-weight: bold; color: #0F4C3A; margin-bottom: 4px; display: block;">Forma de Pago:</label>
+    <select id="forma-pago" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #e0dad0; font-size: 0.9rem; outline: none; background-color: #FAF8F5;">
+        <option value="Efectivo contra entrega">Pago contra entrega (Efectivo)</option>
+        <option value="Transferencia bancaria">Pago por Transferencia</option>
+        <option value="Tarjeta de crédito/débito">Pago con Tarjeta</option>
+    </select>
+</div>
                 <button id="btn-whatsapp" class="btn-pedir-whatsapp" onclick="enviarAWhatsApp()">
                      Confirmar Pedido por WhatsApp
                 </button>
