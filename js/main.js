@@ -55,7 +55,7 @@ const negociosPorCategoria = {
         { nombre: "BELLO OASIS", envioGratis: false, img: "img/bello-oasis.webp" }
     ],
     "mercado": [
-        { nombre: "VERDULERÍA FRESH", envioGratis: false, img: "https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=300" },
+        { nombre: "VERDURAS Y FRUTAS JENNYFER", envioGratis: false, img: "https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=300" },
         { nombre: "CARNICERIA EL RANCHO", envioGratis: false, img: "https://static.vecteezy.com/system/resources/previews/006/981/131/original/fresh-meat-premium-beef-logo-free-vector.jpg" },
         { nombre: "MERCADITO ORIENTE", envioGratis: false, img: "https://www.creativefabrica.com/wp-content/uploads/2024/12/09/Modern-Ecommerce-Website-Logo-SVG-Vector-Graphics-111628754-1-580x387.jpg" }
     ],
@@ -67,29 +67,29 @@ const negociosPorCategoria = {
         { nombre: "1VEA HOGAR", envioGratis: true, img: "img/1vea.webp" }
     ],
     "otros": [
-        { nombre: "ELECTRÓNICA EXPRESS", envioGratis: false, img: "img/electronica.webp" }
+        { nombre: "GRAN BAZAR", envioGratis: true, img: "img/bazar.webp" }
     ]
 };
 
 const infoRestaurantes = {
-    "CEVICHES FISH EXPRESS": { envioGratis: true },
-    "TAQUERO MUCHO": { envioGratis: true },
-    "POLLO DELY ROSY": { envioGratis: true },
-    "LA SICILIANA": { envioGratis: false },
-    "POLLO GRANJERO": { envioGratis: false },
-    "DOMINOS EXPRESS": { envioGratis: false },
+    "CEVICHES FISH EXPRESS": { envioGratis: true, mensajeInfo: "Horario delivery 8am-5pm / envio gratis aplica desde Q55 en casco urbano" }, 
+    "TAQUERO MUCHO": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q30 en casco urbano" },
+    "POLLO DELY ROSY": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q30 en casco urbano" },
+    "LA SICILIANA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-8pm" },
+    "POLLO GRANJERO": { envioGratis: false, mensajeInfo: "Horario delivery 9am-6pm" },
+    "DOMINOS EXPRESS": { envioGratis: false, mensajeInfo: "Horario delivery 8am-8pm"},
     "CARNITAS EL GORDO": { envioGratis: false },
-    "LA NEVERIA": { envioGratis: false },
-    "HOLANDESA": { envioGratis: false },
-    "FARMACIA MI SALUD": { envioGratis: true },
-    "BELLO OASIS": { envioGratis: false },
-    "VERDULERÍA FRESH": { envioGratis: false },
-    "CARNICERIA EL RANCHO": { envioGratis: false },
-    "MERCADITO ORIENTE": { envioGratis: false },
-    "TOTALPLAST": { envioGratis: true },
-    "MOTOS HONDA": { envioGratis: true },
-    "1VEA HOGAR": { envioGratis: true },
-    "ELECTRÓNICA EXPRESS": { envioGratis: false }
+    "LA NEVERIA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-5pm"},
+    "HOLANDESA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-7pm" },
+    "FARMACIA MI SALUD": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q70" },
+    "BELLO OASIS": { envioGratis: false, mensajeInfo: "Horario delivery 8am-8pm"},
+    "VERDURAS Y FRUTAS JENNYFER": { envioGratis: false, mensajeInfo: "Horario delivery 8am-5pm"},
+    "CARNICERIA EL RANCHO": { envioGratis: false, mensajeInfo: "Horario delivery 8am-4pm"},
+    "MERCADITO ORIENTE": { envioGratis: false, mensajeInfo: "Horario delivery 8am-7pm" },
+    "TOTALPLAST": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q70"},
+    "MOTOS HONDA": { envioGratis: true, mensajeInfo: "Envio gratis a todo el pais, de 2 a 3 dias para entrega" },
+    "1VEA HOGAR": { envioGratis: true, mensajeInfo: "Producto desde la fabrica a tu hogar" },
+    "GRAN BAZAR": { envioGratis: true, mensajeInfo:"Envio de 1 a 3 dias, envio gratis aplica desde Q150"}
 };
 
 const menus = {
@@ -210,7 +210,7 @@ const menus = {
         { nombre: "Axe Fragancia+Frescura", precio: 23, descripcion: "desodorante en aerosol de 150ml", imagen: "img/axe-frescura.webp" },
         { nombre: "Ponds Clarant B3", precio: 22, descripcion: "crema antimanchas e hidratante, unifica el tono de piel y desvanece manchas oscuras", imagen: "img/ponds-clarant.webp" }
     ],
-    "VERDULERÍA FRESH": [
+    "VERDURAS Y FRUTAS JENNYFER": [
         { nombre: "Libra de Tomate", precio: 6, descripcion: "Tomate fresco y seleccionado.", imagen: "img/tomate.webp" },
         { nombre: "libra de cebolla", precio: 11, descripcion: "excelente tamaño para cocinar.", imagen: "img/cebolla.webp" },
         { nombre: "Libra de Papa", precio: 8, descripcion: "excelente tamaño para cocinar.", imagen: "img/libra-papa.webp" },
@@ -286,9 +286,21 @@ const menus = {
         { nombre: "Cojin enguantado 2und ", precio: 70, descripcion: "45x45cm 6 colores disponibles", imagen: "img/enguantada.webp",etiqueta: "entrega de 5-8 dias por fabricacion", opciones: ["Gris", "Beige", "Rojo", "Azul", "Negro", "Café"] },
         { nombre: "Almohada Blanca 2und", precio: 70, descripcion: "tamaño mediano de 74x48cm ", imagen: "img/almohada-blanca.webp", etiqueta: "entrega de 5-8 dias por fabricacion"}
     ],
-    "ELECTRÓNICA EXPRESS": [
-        { nombre: "Type-C", precio: 45, descripcion: "Cable de carga rápida", etiqueta: "disponible muy pronto", imagen: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300" },
-        { nombre: "Audífonos Bluetooth Inalámbricos", precio: 95, descripcion: "Controles táctiles y estuche de carga.",etiqueta: "disponible muy pronto", imagen: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300" }
+    "GRAN BAZAR": [
+        { nombre: "Bateria Portatil", precio: 130, descripcion: "18000 mha con doble salida para cargar dos celulares a la vez", imagen: "img/power-bank.webp" },
+        { nombre: "Soporte para celular", precio: 60, descripcion: "impermeable, para moto y bicicleta", imagen: "img/porta-celular.webp" },
+        { nombre: "Batidora de mano", precio: 99, descripcion: "4 aspas, 7 velocidades,completamente electrica", imagen: "img/batidora.webp" },
+        { nombre: "Hervidora Electrica", precio: 110, descripcion: "capacidad de 2LT, material de acero grado alimenticio", imagen: "img/hervidora.webp" },
+        { nombre: "Set utencilios 19pcs", precio: 149, descripcion: "kit completo con base y tabla para picar", imagen: "img/utenzilio.webp" },
+        { nombre: "Licuadora portatil", precio: 65, descripcion: "bateria recargable, ideal para batidos y licuado de frutas blandas", opciones: ["verde","morado","celeste","rosado"], imagen: "img/licuadora.webp" },
+        { nombre: "Traje impermeable", precio: 95, descripcion: "queda a personas de talla S,M,L,XL", imagen: "img/impermeable.webp" },
+        { nombre: "Sombrilla de bolsillo", precio: 45, descripcion: "impermeable ligero, incluye asa para colgar y cubrepolvos, colores son surtidos", imagen: "img/sombrilla.webp" },
+        { nombre: "Dispensador de agua", precio: 45, descripcion: "", imagen: "img/dispensador.webp" },
+        { nombre: "Organizador europeo", precio: 125, descripcion: "60cm de alto, 20cm de ancho, 22cm de fondo, material pvc", imagen: "img/europeo.webp" },
+        { nombre: "zapatera multiusos", precio: 115, descripcion: "tubos de metal, uniones de plastico, divisiones de tela", imagen: "img/zapatera.webp" },
+        { nombre: "Banda terapeutica", precio: 205, descripcion: "brinda masajes termicos en hombros,codos,rodillas y piernas", imagen: "img/bandas.webp" },
+        { nombre: "Bascula portatil", precio: 49, descripcion: "ideal para pesar maletas de viajes u otros", imagen: "img/pesa.webp" },
+        { nombre: "Saran para sombra", precio: 105, descripcion: "3x4 metros. 80% sombra, incluye ojales para facilitar instalacion", imagen: "img/saran.webp" }
     ]
 };
 
@@ -393,10 +405,12 @@ function renderizarTiendas(tiendas) {
 
 function volverAPanelPrincipal() {
     document.getElementById('buscador-restaurante').value = '';
+    document.getElementById("info-negocio-box").style.display = "none";
     cambiarVista('panel-inicio');
 }
 
 function volverANegocios() {
+    document.getElementById("info-negocio-box").style.display = "none";
     cambiarVista('restaurantes');
 }
 
@@ -518,6 +532,18 @@ function agregarDesdeBusqueda(nombreRestaurante, nombreProd, precio) {
 function abrirMenu(nombreRestaurante) {
     restauranteActual = nombreRestaurante;
     document.getElementById('titulo-restaurante').textContent = nombreRestaurante;
+
+    const infoBox = document.getElementById("info-negocio-box");
+    const datosNegocio = infoRestaurantes[nombreRestaurante];
+
+    if (infoBox) {
+        if (datosNegocio && datosNegocio.mensajeInfo) {
+            infoBox.innerHTML = datosNegocio.mensajeInfo;
+            infoBox.style.display = "block";
+        } else {
+            infoBox.style.display = "none";
+        }
+    }
 
     let imgNegocioUrl = "";
     for (let cat in negociosPorCategoria) {
