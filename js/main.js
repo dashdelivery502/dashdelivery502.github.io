@@ -107,7 +107,7 @@ const menus = {
         { nombre: "Burrito de Birria", precio: 35, descripcion: "tortilla de harina con carne de birria y complementos", imagen: "img/burrito-birria.webp" },
         { nombre: "Birria Men", precio: 45, descripcion: "sopa de fideos cocidos con consome de birria y una abundante mezcla de birria y queso", imagen: "img/birria-men.webp" },
         { nombre: "Taco Tradicional Mexicano", precio: 30, descripcion: "taco mexicano con carne a su eleccion", imagen: "img/taco-pastor.webp", opciones: ["al pastor", "de asada", "de pollo", "de longaniza", "de chorizo"] },
-        { nombre: "Quesadilla", precio: 35, descripcion: "tortilla tradicional mexicana con carne de res", imagen: "img/quesadilla.webp", opciones: ["de asada", "al pastor", "de pollo"] },
+        { nombre: "Quesadillas y Burritos", precio: 35, descripcion: "Tradicional mexicano(a) con carne", imagen: "img/quesadilla.webp", opciones: ["de asada", "al pastor", "de pollo","longaniza", "chorizo"] },
         { nombre: "Taqueroburguer", precio: 45, descripcion: "Hamburguesa de la casa con papas", imagen: "img/taqueroburger.webp" },
         { nombre: "Torito con papas", precio: 40, descripcion: "hamburguesa con huevo y papas", imagen: "img/torito.webp" },
         { nombre: "Churrasquito Mixto", precio: 45, descripcion: "Churrasquito de 3 carnes", imagen: "img/churrasco.webp" },
@@ -120,8 +120,9 @@ const menus = {
         { nombre: "Piña Colada", precio: 30, descripcion: "coctel dulce y refrescante elaborada con jugo de piña principalmente", imagen: "img/p-colada.webp" },
         { nombre: "Cafe Helado", precio: 30, descripcion: "bebida refrescante con hielo hecha a base de cafe", imagen: "img/cafe-helado.webp" },
         { nombre: "Michelada", precio: 35, descripcion: "mezcla de jugos vegetales y cerveza", imagen: "img/michelada.webp" },
+        { nombre: "Gaseosa", precio: 8, descripcion: "bebida gaseosa refrescante", opciones: ["Sprite","Fanta Uva", "Fanta Naranja","Coca Cola"] imagen: "img/cocacola.webp" },
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día (Horchata, Jamaica o Tamarindo).", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Horchata", "Jamaica", "Tamarindo"] }
+        { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día .", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Fresa", "Sandia", "Limonada", "melon"] }
     ],
     "POLLO DELY ROSY": [
         { nombre: "Combo 1 Pieza (1Papas + 1Ensalada)", precio: 20, descripcion: "Pieza de pollo crujiente + papas fritas y ensalada", imagen: "https://static.vecteezy.com/system/resources/previews/073/675/187/large_2x/fried-chicken-and-french-fries-free-png.png" },
