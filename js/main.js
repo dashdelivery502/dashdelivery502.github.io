@@ -120,7 +120,7 @@ const menus = {
         { nombre: "Piña Colada", precio: 30, descripcion: "coctel dulce y refrescante elaborada con jugo de piña principalmente", imagen: "img/p-colada.webp" },
         { nombre: "Cafe Helado", precio: 30, descripcion: "bebida refrescante con hielo hecha a base de cafe", imagen: "img/cafe-helado.webp" },
         { nombre: "Michelada", precio: 35, descripcion: "mezcla de jugos vegetales y cerveza", imagen: "img/michelada.webp" },
-        { nombre: "Gaseosa", precio: 8, descripcion: "bebida gaseosa refrescante", opciones: ["Sprite","Fanta Uva", "Fanta Naranja","Coca Cola"] imagen: "img/cocacola.webp" },
+        { nombre: "Gaseosa", precio: 8, descripcion: "bebida gaseosa refrescante", opciones: ["Sprite","Fanta Uva", "Fanta Naranja","Coca Cola"], imagen: "img/cocacola.webp" },
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
         { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día .", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Fresa", "Sandia", "Limonada", "melon"] }
     ],
