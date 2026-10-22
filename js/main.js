@@ -107,7 +107,7 @@ const menus = {
         { nombre: "Burrito de Birria", precio: 35, descripcion: "tortilla de harina con carne de birria y complementos", imagen: "img/burrito-birria.webp" },
         { nombre: "Birria Men", precio: 45, descripcion: "sopa de fideos cocidos con consome de birria y una abundante mezcla de birria y queso", imagen: "img/birria-men.webp" },
         { nombre: "Taco Tradicional Mexicano", precio: 30, descripcion: "taco mexicano con carne a su eleccion", imagen: "img/taco-pastor.webp", opciones: ["al pastor", "de asada", "de pollo", "de longaniza", "de chorizo"] },
-        { nombre: "Quesadilla", precio: 30, descripcion: "tortilla tradicional mexicana con carne de res", imagen: "img/quesadilla.webp", opciones: ["de asada", "al pastor", "de pollo"] },
+        { nombre: "Quesadilla", precio: 35, descripcion: "tortilla tradicional mexicana con carne de res", imagen: "img/quesadilla.webp", opciones: ["de asada", "al pastor", "de pollo"] },
         { nombre: "Taqueroburguer", precio: 45, descripcion: "Hamburguesa de la casa con papas", imagen: "img/taqueroburger.webp" },
         { nombre: "Torito con papas", precio: 40, descripcion: "hamburguesa con huevo y papas", imagen: "img/torito.webp" },
         { nombre: "Churrasquito Mixto", precio: 45, descripcion: "Churrasquito de 3 carnes", imagen: "img/churrasco.webp" },
