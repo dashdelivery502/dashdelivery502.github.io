@@ -1,5 +1,5 @@
 // Cambiamos a v2 para obligar a los teléfonos/navegadores a actualizar
-const CACHE_NAME = 'dash-delivery-v25';
+const CACHE_NAME = 'dash-delivery-v26';
 
 // Archivos a guardar en la caché (incluyendo las nuevas carpetas)
 const urlsToCache = [

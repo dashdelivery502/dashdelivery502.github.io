@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getDatabase, ref, get, push, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-// Tu configuración de Firebase
 
 const firebaseConfig = {
     apiKey: "AIzaSyArxtD5VjH4YH1T39dFn0yEyp9NAh42tXM",
@@ -13,14 +12,10 @@ const firebaseConfig = {
     measurementId: "G-9GX5BS52R2"
 };
 
-// Inicializar Realtime Database
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-// Inicializar Auth
 const auth = getAuth(app);
 
-// Iniciar sesión anónima automáticamente
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("Sesión anónima activa con UID:", user.uid);
@@ -35,6 +30,7 @@ let carrito = [];
 let restauranteActual = "";
 let categoriaActual = "";
 let vistaActual = "panel-inicio";
+let subcategoriaActiva = 'menus';
 
 const NUMERO_WHATSAPP = "50253062335";
 
@@ -94,78 +90,80 @@ const infoRestaurantes = {
 
 const menus = {
     "CEVICHES FISH EXPRESS": [
-        { nombre: "ceviche mixto", precio: 50, descripcion: "Mariscos frescos surtidos marinados en zumo de limón con cilantro, cebolla picada y galletas saladas.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
-        { nombre: "ceviche mixto grande", precio: 80, descripcion: "Porción familiar de camarón y pescado con sazón especial de la casa, aguacate y acompañamientos.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" },
-        { nombre: "ceviche de camaron", precio: 80, descripcion: "Camarones seleccionados curtidos en limón con tomate, cebolla, salsa inglesa y un toque picante.", imagen: "https://www.guatemala.com/fotos/2020/04/ceviche-885x500.jpg" },
-        { nombre: "Gaseosa en lata", precio: 6, descripcion: "Lata fría salvavidas sabor uva, limon o naranja.", imagen: "https://latorremx.vtexassets.com/arquivos/ids/190394-800-auto?v=638494109579900000&width=800&height=auto&aspect=true", opciones: ["Uva", "Limón", "Naranja"] }
+        { nombre: "ceviche mixto", precio: 50, descripcion: "Mariscos frescos surtidos marinados en zumo de limón con cilantro, cebolla picada y galletas saladas.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg", subcat: "menus" },
+        { nombre: "ceviche mixto grande", precio: 80, descripcion: "Porción familiar de camarón y pescado con sazón especial de la casa, aguacate y acompañamientos.", imagen: "https://www.laylita.com/recetas/wp-content/uploads/1-Ceviche-de-camaron-640x640.jpg" , subcat: "menus"},
+        { nombre: "ceviche de camaron", precio: 80, descripcion: "Camarones seleccionados curtidos en limón con tomate, cebolla, salsa inglesa y un toque picante.", imagen: "https://www.guatemala.com/fotos/2020/04/ceviche-885x500.jpg", subcat: "menus" },
+        { nombre: "Gaseosa en lata", precio: 6, descripcion: "Lata fría salvavidas sabor uva, limon o naranja.", imagen: "https://latorremx.vtexassets.com/arquivos/ids/190394-800-auto?v=638494109579900000&width=800&height=auto&aspect=true", opciones: ["Uva", "Limón", "Naranja"], subcat: "bebidas" }
     ],
     "TAQUERO MUCHO": [
-        { nombre: "Quesa Birria", precio: 35, descripcion: "3 tortillas rellenas de carne de res deshebrada con abundante queso", imagen: "img/quesabirria.webp" },
-        { nombre: "Doraditas de Birria", precio: 35, descripcion: "tortilla dorada con carne deshebrada", imagen: "img/doradita-birria.webp" },
-        { nombre: "Mega Birria", precio: 60, descripcion: "tortilla grande rellena de carne de res deshebrada y abundante queso", imagen: "img/mega-birria.webp" },
-        { nombre: "Costra de Queso", precio: 40, descripcion: "queso a la plancha tostado y crujiente", imagen: "img/costra-queso.webp" },
-        { nombre: "Burrito de Birria", precio: 35, descripcion: "tortilla de harina con carne de birria y complementos", imagen: "img/burrito-birria.webp" },
-        { nombre: "Birria Men", precio: 45, descripcion: "sopa de fideos cocidos con consome de birria y una abundante mezcla de birria y queso", imagen: "img/birria-men.webp" },
-        { nombre: "Taco Tradicional Mexicano", precio: 30, descripcion: "taco mexicano con carne a su eleccion", imagen: "img/taco-pastor.webp", opciones: ["al pastor", "de asada", "de pollo", "de longaniza", "de chorizo"] },
-        { nombre: "Quesadillas y Burritos", precio: 35, descripcion: "Tradicional mexicano(a) con carne", imagen: "img/quesadilla.webp", opciones: ["de asada", "al pastor", "de pollo","longaniza", "chorizo"] },
-        { nombre: "Taqueroburguer", precio: 45, descripcion: "Hamburguesa de la casa con papas", imagen: "img/taqueroburger.webp" },
-        { nombre: "Torito con papas", precio: 40, descripcion: "hamburguesa con huevo y papas", imagen: "img/torito.webp" },
-        { nombre: "Churrasquito Mixto", precio: 45, descripcion: "Churrasquito de 3 carnes", imagen: "img/churrasco.webp" },
-        { nombre: "6 Alitas en Barbacoa", precio: 40, descripcion: "alitas de pollo bañadas en barbacoa", imagen: "img/alitas.webp"},
-        { nombre: "12 Alitas en Barbacoa", precio: 60, descripcion: "alitas de pollo bañadas en barbacoa", imagen: "img/alitas.webp" },
-        { nombre: "Bandeja de 20 tacos", precio: 200, descripcion: "20 tacos mixtos con acompañamiento", imagen: "img/bandeja-grande.webp" },
-        { nombre: "Bandeja de 15 Tacos", precio: 160, descripcion: "15 tacos mixtos con acompañamientos", imagen: "img/bandeja-grande.webp" },
-        { nombre: "Bandeja de 12 Tacos", precio: 135, descripcion: "12 tacos mixtos con acompañamientos", imagen: "img/bandeja-grande.webp" },
-        { nombre: "Licuados", precio: 15, descripcion: "licuado de fruta natural a su eleccion", imagen: "img/licuados.webp", opciones: ["Fresa", "Banano", "Melon"] },
-        { nombre: "Piña Colada", precio: 30, descripcion: "coctel dulce y refrescante elaborada con jugo de piña principalmente", imagen: "img/p-colada.webp" },
-        { nombre: "Cafe Helado", precio: 30, descripcion: "bebida refrescante con hielo hecha a base de cafe", imagen: "img/cafe-helado.webp" },
-        { nombre: "Michelada", precio: 35, descripcion: "mezcla de jugos vegetales y cerveza", imagen: "img/michelada.webp" },
-        { nombre: "Gaseosa", precio: 8, descripcion: "bebida gaseosa refrescante", opciones: ["Sprite","Fanta Uva", "Fanta Naranja","Coca Cola"], imagen: "img/cocacola.webp" },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día .", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Fresa", "Sandia", "Limonada", "melon"] }
+        { nombre: "Quesa Birria", precio: 35, descripcion: "3 tortillas rellenas de carne de res deshebrada con abundante queso", imagen: "img/quesabirria1.webp", subcat: "menus" },
+        { nombre: "Doraditas de Birria", precio: 35, descripcion: "tortilla dorada con carne deshebrada", imagen: "img/doraditas.webp", subcat: "menus" },
+        { nombre: "Mega Birria", precio: 60, descripcion: "tortilla grande rellena de carne de res deshebrada y abundante queso", imagen: "img/megabirria.webp", subcat: "menus" },
+        { nombre: "Costra de Queso", precio: 40, descripcion: "queso a la plancha tostado y crujiente", imagen: "img/costra-queso.webp", subcat: "menus" },
+        { nombre: "Birria Men", precio: 45, descripcion: "sopa de fideos cocidos con consome de birria y una abundante mezcla de birria y queso", imagen: "img/birria-men.webp", subcat:"menus" },
+        { nombre: "Taco Tradicional Mexicano", precio: 30, descripcion: "taco mexicano con carne a su eleccion", imagen: "img/taco-pastor.webp", opciones: ["al pastor", "de asada", "de pollo", "de longaniza", "de chorizo"], subcat:"menus" },
+        { nombre: "Quesadillas y Burritos", precio: 35, descripcion: "Tradicional mexicano(a) con carne", imagen: "img/quesadilla2.webp", opciones: ["de asada", "al pastor", "de pollo","longaniza", "chorizo"], subcat:"menus" },
+        { nombre: "Taqueroburguer", precio: 45, descripcion: "Hamburguesa de la casa con papas", imagen: "img/taqueroburger1.webp", subcat:"menus" },
+        { nombre: "Torito con papas", precio: 40, descripcion: "hamburguesa con huevo y papas", imagen: "img/torito.webp", subcat:"menus" },
+        { nombre: "Churrasquito Mixto", precio: 45, descripcion: "Churrasquito de 3 carnes", imagen: "img/churrasco.webp", subcat:"menus" },
+        { nombre: "6 Alitas en Barbacoa", precio: 40, descripcion: "alitas de pollo bañadas en barbacoa", imagen: "img/alitas1.webp", subcat:"menus"},
+        { nombre: "12 Alitas en Barbacoa", precio: 60, descripcion: "alitas de pollo bañadas en barbacoa", imagen: "img/alitas1.webp", subcat:"menus" },
+        { nombre: "Bandeja de 20 tacos", precio: 200, descripcion: "20 tacos mixtos con acompañamiento", imagen: "img/bandejas.webp", subcat:"menus" },
+        { nombre: "Bandeja de 15 Tacos", precio: 160, descripcion: "15 tacos mixtos con acompañamientos", imagen: "img/bandejas.webp", subcat:"menus" },
+        { nombre: "Bandeja de 12 Tacos", precio: 135, descripcion: "12 tacos mixtos con acompañamientos", imagen: "img/bandejas.webp", subcat:"menus" },
+        { nombre: "Licuados", precio: 15, descripcion: "licuado de fruta natural a su eleccion", imagen: "img/licuados.webp", opciones: ["Fresa", "Banano", "Melon"], subcat:"bebidas" },
+        { nombre: "Piña Colada", precio: 30, descripcion: "coctel dulce y refrescante elaborada con jugo de piña principalmente", imagen: "img/p-colada.webp", subcat:"bebidas" },
+        { nombre: "Cafe Helado", precio: 30, descripcion: "bebida refrescante con hielo hecha a base de cafe", imagen: "img/cafe-helado.webp", subcat:"bebidas" },
+        { nombre: "Michelada", precio: 35, descripcion: "mezcla de jugos vegetales y cerveza", imagen: "img/michelada.webp", subcat:"bebidas" },
+        { nombre: "Gaseosa", precio: 8, descripcion: "bebida gaseosa refrescante", opciones: ["Sprite","Fanta Uva", "Fanta Naranja","Coca Cola"], imagen: "img/cocacola.webp", subcat:"bebidas" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
+        { nombre: "Bebida Natural", precio: 10, descripcion: "Fresco natural preparado al día .", imagen: "https://media.istockphoto.com/id/1171303132/photo/strawberry-cocktail-and-strawberry-on-wooden-table-with-a-blank-space-for-a-text.jpg?s=1024x1024&w=is&k=20&c=7up1VlKOlVHW6V-HQp7IyC5J-WS2xbEYdd3RD3YxfC4=", opciones: ["Fresa", "Sandia", "Limonada", "melon"], subcat:"bebidas" }
     ],
     "POLLO DELY ROSY": [
-        { nombre: "Combo 1 Pieza (1Papas + 1Ensalada)", precio: 20, descripcion: "Pieza de pollo crujiente + papas fritas y ensalada", imagen: "https://static.vecteezy.com/system/resources/previews/073/675/187/large_2x/fried-chicken-and-french-fries-free-png.png" },
-        { nombre: "Combo 2 Piezas (1Papas + 1Ensalada)", precio: 30, descripcion: "Dos piezas de pollo acompañadas de 1 porcion de papas fritas y 1 ensalada.", imagen: "https://tse3.mm.bing.net/th/id/OIP.vuytQ9IbZyLeWM6A5BoakwHaF0?r=0&w=1920&h=1510&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "Combo 3 Piezas (1Papas + 1Ensalada)", precio: 37, descripcion: "Tres piezas de pollo frito con 1 porcion de papa y 1 ensalada", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300" },
-        { nombre: "1 Papa", precio: 7, descripcion: "Complemento extra individual", imagen: "https://static.vecteezy.com/system/resources/previews/059/482/403/non_2x/crispy-golden-french-fries-served-in-a-red-container-for-a-delicious-fast-food-snack-french-fries-food-fast-food-snack-isolated-lunch-take-out-free-png.png" },
-        { nombre: "1 Ensalada", precio: 7, descripcion: "Complemento extra individual.", imagen: "https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_150,q_auto:low,fl_lossy,dpr_2.0,c_fill,f_auto,h_150/bfubmka0kj0j23n1ndnx" },
-        { nombre: "Papas Locas", precio: 15, descripcion: "Papas fritas con salsa y mayonesa", imagen: "https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnibWid62HSACJCV9jl2pbaLD0xj-XybCaS6AR_GCix25V9xBbEWNMVPOjuIXDH10_7XAyAlFa5Au3GsMv27ZjVVArSq7hwomRSM-j1Bt37dUKXuc82mXF7h_lQOq_O_POXPtKvg?key=ls6I_YEY3fzKA7j1A3GHLg" },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "Gaseosa en lata", precio: 8, descripcion: "Bebida gaseosa Coca Cola en lata.", imagen: "img/cocacola.webp" }
+        { nombre: "Combo 1 Pieza (1Papas + 1Ensalada)", precio: 20, descripcion: "Pieza de pollo crujiente + papas fritas y ensalada", imagen: "https://static.vecteezy.com/system/resources/previews/073/675/187/large_2x/fried-chicken-and-french-fries-free-png.png", subcat:"menus" },
+        { nombre: "Combo 2 Piezas (1Papas + 1Ensalada)", precio: 30, descripcion: "Dos piezas de pollo acompañadas de 1 porcion de papas fritas y 1 ensalada.", imagen: "https://tse3.mm.bing.net/th/id/OIP.vuytQ9IbZyLeWM6A5BoakwHaF0?r=0&w=1920&h=1510&rs=1&pid=ImgDetMain&o=7&rm=3", subcat:"menus" },
+        { nombre: "Combo 3 Piezas (1Papas + 1Ensalada)", precio: 37, descripcion: "Tres piezas de pollo frito con 1 porcion de papa y 1 ensalada", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300",subcat:"menus" },
+        { nombre: "combo 5 piezas (2ensaladas + 2papas", precio: 5, descripcion: "5 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
+        { nombre: "combo 8 piezas(3ensaladas + 3papas)", precio: 5, descripcion: "8 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
+        { nombre: "1 Papa", precio: 7, descripcion: "Complemento extra individual", imagen: "https://static.vecteezy.com/system/resources/previews/059/482/403/non_2x/crispy-golden-french-fries-served-in-a-red-container-for-a-delicious-fast-food-snack-french-fries-food-fast-food-snack-isolated-lunch-take-out-free-png.png",subcat:"complementos" },
+        { nombre: "1 Ensalada", precio: 7, descripcion: "Complemento extra individual.", imagen: "https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_150,q_auto:low,fl_lossy,dpr_2.0,c_fill,f_auto,h_150/bfubmka0kj0j23n1ndnx", subcat:"complementos" },
+        { nombre: "Papas Locas", precio: 15, descripcion: "Papas fritas con salsa y mayonesa", imagen: "https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnibWid62HSACJCV9jl2pbaLD0xj-XybCaS6AR_GCix25V9xBbEWNMVPOjuIXDH10_7XAyAlFa5Au3GsMv27ZjVVArSq7hwomRSM-j1Bt37dUKXuc82mXF7h_lQOq_O_POXPtKvg?key=ls6I_YEY3fzKA7j1A3GHLg", subcat:"complementos" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp", subcat:"bebidas" },
+        { nombre: "Gaseosa en lata", precio: 8, descripcion: "Bebida gaseosa Coca Cola en lata.",opciones:["coca cola","sprite","fanta uva","fanta naranja"], imagen: "img/cocacola.webp", subcat:"bebidas" }
     ],
     "LA SICILIANA": [
-        { nombre: "Pizza Personal", precio: 20, descripcion: "Pizza individual de 4 rebanadas horneada en piedra con salsa de tomate y queso mozzarella.", imagen: "img/personal-sici.webp" },
-        { nombre: "Pizza Carnilover", precio: 65, descripcion: "Pizza grande cargada con pepperoni, salchicha italiana, jamón, tocino crocante y extra queso.", imagen: "img/carnilover-sici.webp" },
-        { nombre: "Pizza Hawaiana", precio: 60, descripcion: "Combinación clásica de piña caramelizada en almíbar, trozos de jamón premium y queso derretido.", imagen: "img/hawai-sici.webp" },
-        { nombre: "Pizza Grande Extra Queso", precio: 55, descripcion: "Pizza familiar de 8 porciones bañada en doble capa de queso mozzarella fundido.", imagen: "img/extra-queso-sici.webp" },
-        { nombre: "2 Pizzas Grandes (+ 8 Canelitas)", precio: 90, descripcion: "Super combo de 2 pizzas familiares a elección más 8 deliciosos palitroques dulces con canela.", imagen: "img/combo1-sici.webp" },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp" }
+        { nombre: "Pizza Personal", precio: 15, descripcion: "Pizza individual de 4 rebanadas horneada en piedra con salsa de tomate y queso mozzarella.", imagen: "img/personal-sici.webp", subcat:"menus" },
+        { nombre: "Calzone Supremo", precio: 20, descripcion: "mas relleno, mas razones para pedirlo", imagen: "img/calzone.webp", subcat:"menus" },
+        { nombre: "Pizza Carnilover", precio: 60, descripcion: "Pizza grande cargada con pepperoni, salchicha italiana, jamón, tocino crocante y extra queso.", imagen: "img/carnilover-sici.webp",subcat:"menus" },
+        { nombre: "Pizza Hawaiana", precio: 60, descripcion: "Combinación clásica de piña caramelizada en almíbar, trozos de jamón premium y queso derretido.", imagen: "img/hawai-sici.webp" ,subcat:"menus"},
+        { nombre: "Pizza Grande Extra Queso", precio: 55, descripcion: "Pizza familiar de 8 porciones bañada en doble capa de queso mozzarella fundido.", imagen: "img/extra-queso-sici.webp",subcat:"menus" },
+        { nombre: "2 Pizzas Grandes (+ 8 Canelitas)", precio: 90, descripcion: "Super combo de 2 pizzas familiares a elección más 8 deliciosos palitroques dulces con canela.", imagen: "img/combo1-sici.webp",subcat:"menus" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
+        { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp",subcat:"bebidas" }
     ],
     "POLLO GRANJERO": [
-        { nombre: "Menu 1 pieza", precio: 25, descripcion: "1 pieza (no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
-        { nombre: "Menu 2 piezas", precio: 35, descripcion: "2 piezas(no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
-        { nombre: "Menu 3 piezas", precio: 45, descripcion: "3 piezas(no pechuga) + 1 papa + 1 ensalada ", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg" },
-        { nombre: "Combo 5 piezas", precio: 85, descripcion: "5 piezas(no pechuga) + 2 papas + 2 ensaladas", imagen: "https://cdn.telediario.cr/uploads/media/2026/03/19/cadena-cierra-sus-operaciones-en.jpg" },
-        { nombre: "Combo 8 piezas", precio: 120, descripcion: "8 piezas(no pechuga)+3 papas +3 ensaladas", imagen: "https://images.rappi.co.cr/restaurants_background/7367_1654882378124.png?e=webp&d=800x800&q=70" },
-        { nombre: "Hamburguesa", precio: 22, descripcion: "Hamburguesa doble con queso", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/hamburguesa-doble-torta.png" },
-        { nombre: "Porcion de papas", precio: 8, descripcion: "papas fritas normales", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/papa-frita-pequena.png" },
-        { nombre: "Ensalada", precio: 8, descripcion: "ensalada de repollo individual", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/ensalada-de-repollo.png" },
-        { nombre: "Pastelito", precio: 7, descripcion: "unidad de pastelito relleno con manzana", imagen: "https://tse1.mm.bing.net/th/id/OIP.x6D1n4exd2z5Eah7-kNryQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "Gaseosa en lata", precio: 6, descripcion: "gaseosa salvavidas sabor limon,uva o naranja", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["Limón", "Uva", "Naranja"] },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp" }
+        { nombre: "Menu 1 pieza", precio: 25, descripcion: "1 pieza (no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg",subcat:"menus" },
+        { nombre: "Menu 2 piezas", precio: 35, descripcion: "2 piezas(no pechuga) + 1 papa + 1 ensalada", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg",subcat:"menus" },
+        { nombre: "Menu 3 piezas", precio: 45, descripcion: "3 piezas(no pechuga) + 1 papa + 1 ensalada ", imagen: "https://tb-static.uber.com/prod/image-proc/processed_images/b4119674e9468e902f62efaf88e8d949/fb86662148be855d931b37d6c1e5fcbe.jpeg",subcat:"menus" },
+        { nombre: "Combo 5 piezas", precio: 85, descripcion: "5 piezas(no pechuga) + 2 papas + 2 ensaladas", imagen: "https://cdn.telediario.cr/uploads/media/2026/03/19/cadena-cierra-sus-operaciones-en.jpg", subcat:"menus" },
+        { nombre: "Combo 8 piezas", precio: 120, descripcion: "8 piezas(no pechuga)+3 papas +3 ensaladas", imagen: "https://images.rappi.co.cr/restaurants_background/7367_1654882378124.png?e=webp&d=800x800&q=70",subcat:"menus" },
+        { nombre: "Hamburguesa", precio: 22, descripcion: "Hamburguesa doble con queso", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/hamburguesa-doble-torta.png",subcat:"menus" },
+        { nombre: "Porcion de papas", precio: 8, descripcion: "papas fritas normales", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/papa-frita-pequena.png",subcat:"complementos" },
+        { nombre: "Ensalada", precio: 8, descripcion: "ensalada de repollo individual", imagen: "https://pricelisto-files.s3.us-east-2.amazonaws.com/pollo-granjero-cr/ensalada-de-repollo.png" ,subcat:"complementos"},
+        { nombre: "Pastelito", precio: 7, descripcion: "unidad de pastelito relleno con manzana", imagen: "https://tse1.mm.bing.net/th/id/OIP.x6D1n4exd2z5Eah7-kNryQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" ,subcat:"complementos"},
+        { nombre: "Gaseosa en lata", precio: 6, descripcion: "gaseosa salvavidas sabor limon,uva o naranja", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["Limón", "Uva", "Naranja"],subcat:"bebidas" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" ,subcat:"bebidas"},
+        { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp",subcat:"bebidas" }
     ],
     "DOMINOS EXPRESS": [
-        { nombre: "Pizza Pepperoni", precio: 55, descripcion: "rebanadas de pepperoni doradito y queso fundido.", imagen: "img/peperoni-domi.webp" },
-        { nombre: "Pizza Tropical", precio: 65, descripcion: "Sabor agridulce especial con jamón, piña fresca y salsa de la casa.", imagen: "img/tropical-domi.webp" },
-        { nombre: "Pizza Carnivora", precio: 70, descripcion: "jamón, pepperoni, carne molida y salchicha frita.", imagen: "img/carnivora-domi.webp" },
-        { nombre: "Pizzerola", precio: 20, descripcion: "queso derretido y especias italianas.", imagen: "img/pizzerola-domi.webp" },
-        { nombre: "Mega Empanada", precio: 20, descripcion: "Empanada gigante frita rellena de carne picada sazonada con vegetales.", imagen: "img/empanada-domi.webp" },
-        { nombre: "Gaseosa Salvavidas en Lata", precio: 6, descripcion: "gaseosa salvavidas del sabor que prefieras", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["limon", "uva", "naranja"] },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "Pepsi 1 Litro", precio: 8, descripcion: "Bebida familiar refrescante Pepsi de 1 L.", imagen: "img/pepsi.webp" }
+        { nombre: "Pizza Pepperoni", precio: 55, descripcion: "rebanadas de pepperoni doradito y queso fundido.", imagen: "img/peperoni-domi.webp",subcat:"menus" },
+        { nombre: "Pizza Tropical", precio: 65, descripcion: "Sabor agridulce especial con jamón, piña fresca y salsa de la casa.", imagen: "img/tropical-domi.webp",subcat:"menus" },
+        { nombre: "Pizza Carnivora", precio: 70, descripcion: "jamón, pepperoni, carne molida y salchicha frita.", imagen: "img/carnivora-domi.webp",subcat:"menus" },
+        { nombre: "Pizzerola", precio: 20, descripcion: "queso derretido y especias italianas.", imagen: "img/pizzerola-domi.webp",subcat:"menus" },
+        { nombre: "Mega Empanada", precio: 20, descripcion: "Empanada gigante frita rellena de carne picada sazonada con vegetales.", imagen: "img/empanada-domi.webp",subcat:"menus" },
+        { nombre: "Gaseosa Salvavidas en Lata", precio: 6, descripcion: "gaseosa salvavidas del sabor que prefieras", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["limon", "uva", "naranja"],subcat:"bebidas" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
+        { nombre: "Pepsi 1 Litro", precio: 8, descripcion: "Bebida familiar refrescante Pepsi de 1 L.", imagen: "img/pepsi.webp",subcat:"bebidas" }
     ],
     "CARNITAS EL GORDO": [
         { nombre: "Libra de Carnitas", precio: 55,etiqueta: "disponible muy pronto", descripcion: "Carne de cerdo frita en su propia grasa bien doradita por fuera y suave por dentro", imagen: "img/carnitas.webp" },
@@ -177,27 +175,27 @@ const menus = {
         { nombre: "gaseosa en lata", precio: 6,etiqueta: "disponible muy pronto", descripcion: "Lata personal de gaseosa salvavidas surtida.", imagen: "https://salvavidasenlinea.com.gt/wp-content/uploads/2025/01/Foto_AppTuHogar_1500px_BLUE-800x800.jpg", opciones: ["Uva", "Limón", "Naranja", "Cola"] }
     ], 
     "LA NEVERIA": [
-        { nombre: "Helado wafle", precio: 14, descripcion: "cono normal con una bola de helado", imagen: "img/wafle.webp", opciones: ["Vainilla", "Chocolate", "Fresa", "napolitano"] },
-        { nombre: "Wafle Doble", precio: 19, descripcion: "cono normal con dos bolas de helado", imagen: "img/wafle-doble.webp" },
-        { nombre: "Choco Wafle", precio: 18, descripcion: "cono con chocolate y una bola de helado", imagen: "img/choco-wafle.webp" },
-        { nombre: "Litro de helado", precio: 36, descripcion: "sabor a tu eleccion, no incluye conos", opciones: ["fresa","chocolate","queso crema"], imagen: "img/helado-litro.webp" },
-        { nombre: "Medio Galon de Helado", precio: 57, descripcion: "no incluye conos, el descuento de la promocion se hace al completar su pedido",etiqueta: "promo 2xQ95", opciones: ["fresa", "vainilla"], imagen: "img/helado-medio-galon.webp" },
-        { nombre: "choco banana", precio: 32, descripcion: "", imagen: "img/choco-banana.webp" },
-        { nombre: "Banana topper", precio: 32, descripcion: "", imagen: "img/banana-truper.webp" },
-        { nombre: "Banana split", precio: 32, descripcion: "3 bolas de helado acompañadas de banano y galleta", imagen: "img/banana-split.webp" },
-        { nombre: "Cafe Helado", precio: 28, descripcion: "",opciones: ["caramelo","chocolate","chocogalleta","mocca", "cookies and creame"], imagen: "img/cafe-helado-neveria.webp" },
-        { nombre: "Sundae", precio: 26, descripcion: "3 bolas de rico helado", imagen: "img/sundae.webp", opciones: ["Vainilla", "Chocolate", "Fresa"] },
-        { nombre: "Pastel de Helado pequeño", precio: 110, descripcion: "de 4 a 6 porciones segun medida", imagen: "img/pastel-pe.webp" },
-        { nombre: "Pastel de Helado Mediano", precio: 155, descripcion: "pastel de 8 a 12 porciones segun medida", imagen: "img/pastel-g.webp" },
-        { nombre: "Pastel de Helado Grande", precio: 210, descripcion: "pastel de 16 a 20 porciones segun medida", imagen: "img/pastel-pe.webp" }
+        { nombre: "Helado wafle", precio: 14, descripcion: "cono normal con una bola de helado", imagen: "img/wafle.webp", opciones: ["Vainilla", "Chocolate", "Fresa", "napolitano"],subcat:"menus" },
+        { nombre: "Wafle Doble", precio: 19, descripcion: "cono normal con dos bolas de helado", imagen: "img/wafle-doble.webp",subcat:"menus" },
+        { nombre: "Choco Wafle", precio: 18, descripcion: "cono con chocolate y una bola de helado", imagen: "img/choco-wafle.webp",subcat:"menus" },
+        { nombre: "Litro de helado", precio: 36, descripcion: "sabor a tu eleccion, no incluye conos", opciones: ["fresa","chocolate","queso crema"], imagen: "img/helado-litro.webp",subcat:"menus" },
+        { nombre: "Medio Galon de Helado", precio: 57, descripcion: "no incluye conos, el descuento de la promocion se hace al completar su pedido",etiqueta: "promo 2xQ95",subcat:"menus", opciones: ["fresa", "vainilla"], imagen: "img/helado-medio-galon.webp" },
+        { nombre: "choco banana", precio: 32, descripcion: "", imagen: "img/choco-banana.webp",subcat:"menus" },
+        { nombre: "Banana topper", precio: 32, descripcion: "", imagen: "img/banana-truper.webp",subcat:"menus" },
+        { nombre: "Banana split", precio: 32, descripcion: "3 bolas de helado acompañadas de banano y galleta", imagen: "img/banana-split.webp",subcat:"menus" },
+        { nombre: "Cafe Helado", precio: 28, descripcion: "",opciones: ["caramelo","chocolate","chocogalleta","mocca", "cookies and creame"], imagen: "img/cafe-helado-neveria.webp",subcat:"menus" },
+        { nombre: "Sundae", precio: 26, descripcion: "3 bolas de rico helado", imagen: "img/sundae.webp", opciones: ["Vainilla", "Chocolate", "Fresa"] ,subcat:"menus"},
+        { nombre: "Pastel de Helado pequeño", precio: 110, descripcion: "de 4 a 6 porciones segun medida", imagen: "img/pastel-pe.webp" ,subcat:"menus"},
+        { nombre: "Pastel de Helado Mediano", precio: 155, descripcion: "pastel de 8 a 12 porciones segun medida", imagen: "img/pastel-g.webp",subcat:"menus" },
+        { nombre: "Pastel de Helado Grande", precio: 210, descripcion: "pastel de 16 a 20 porciones segun medida", imagen: "img/pastel-pe.webp",subcat:"menus" }
     ],
     "HOLANDESA": [
-        { nombre: "Pastel California", precio: 185, descripcion: "12 a 16 porciones", imagen: "img/pastel-california.webp" },
-        { nombre: "Porcion 3 leches", precio: 12, descripcion: "porcion para una persona", imagen: "img/3leches.webp" },
-        { nombre: "Pastel de frutas extra grande", precio: 225, descripcion: "16 a 20 porciones", imagen: "img/pastel-frutas.webp" },
-        { nombre: "pastel de frutas", precio: 130, descripcion: "8 a 10 porciones", imagen: "img/pastel-frutas.webp" },
-        { nombre: "Coca Cola", precio: 8, descripcion: "Bebida gaseosa en lata de 354ml", imagen: "img/cocacola.webp" },
-        { nombre: "3 litros de gaseosa", precio: 20, descripcion: "Botella tamaño gigante Tiky o similar de 3 Litros.", imagen: "https://salvavidasenlinea.com.gt/wp-content/uploads/2022/08/TIKY-3-LTS.png", opciones: ["Tiky", "Uva", "Limon"] }
+        { nombre: "Pastel California", precio: 185, descripcion: "12 a 16 porciones", imagen: "img/pastel-california.webp",subcat:"menus" },
+        { nombre: "Porcion 3 leches", precio: 12, descripcion: "porcion para una persona", imagen: "img/3leches.webp",subcat:"menus" },
+        { nombre: "Pastel de frutas extra grande", precio: 225, descripcion: "16 a 20 porciones", imagen: "img/pastel-frutas.webp",subcat:"menus" },
+        { nombre: "pastel de frutas", precio: 130, descripcion: "8 a 10 porciones", imagen: "img/pastel-frutas.webp",subcat:"menus" },
+        { nombre: "Coca Cola", precio: 8, descripcion: "Bebida gaseosa en lata de 354ml", imagen: "img/cocacola.webp",subcat:"bebidas" },
+        { nombre: "3 litros de gaseosa", precio: 20, descripcion: "Botella tamaño gigante Tiky o similar de 3 Litros.", imagen: "https://salvavidasenlinea.com.gt/wp-content/uploads/2022/08/TIKY-3-LTS.png", opciones: ["Tiky", "Uva", "Limon"],subcat:"bebidas" }
     ],
     "FARMACIA MI SALUD": [
         { nombre: "Acetaminofén 500mg MK blister", precio: 10, descripcion: "Analgésico para adultos en presentacion de 10 tabletas comprimidas.", imagen: "img/aceta-mk.webp" },
@@ -397,7 +395,6 @@ function renderizarTiendas(tiendas) {
     tiendas.forEach(tienda => {
         let badgeText = tienda.envioGratis ? '🚚 Envío Gratis' : '🚚 Envío con Costo';
         let badgeClass = tienda.envioGratis ? 'badge-gratis' : 'badge-costo';
-
         let badgePedidoHtml = tienda.bajoPedido ? `<span class="badge-pedido">📦 Bajo Pedido (7 días)</span>` : '';
 
         grid.innerHTML += `
@@ -430,7 +427,6 @@ function normalizarTexto(texto) {
 let temporizadorBusqueda = null;
 
 function buscarRestaurante() {
-    // Cancelar cualquier búsqueda pendiente
     if (temporizadorBusqueda) {
         clearTimeout(temporizadorBusqueda);
     }
@@ -438,7 +434,6 @@ function buscarRestaurante() {
     const inputVal = document.getElementById('buscador-restaurante').value;
     const filtro = normalizarTexto(inputVal.trim());
 
-    // Si el usuario borró todo el texto, restablecer de inmediato sin delay
     if (filtro === "") {
         if (vistaActual === 'resultados_busqueda' || vistaActual === 'restaurantes') {
             volverAPanelPrincipal();
@@ -446,7 +441,6 @@ function buscarRestaurante() {
         return;
     }
 
-    // Esperar 250ms solo mientras el usuario sigue escribiendo
     temporizadorBusqueda = setTimeout(() => {
         let productosEncontrados = [];
 
@@ -538,9 +532,31 @@ function agregarDesdeBusqueda(nombreRestaurante, nombreProd, precio) {
     agregarAlCarritoDirecto(nombreFinal, precio);
 }
 
+function obtenerSubcategoria(prod) {
+    // 🟢 ESTO ES LO QUE FALTABA: Leer la subcategoría manual primero
+    if (prod.subcat) return prod.subcat;
+
+    const nombre = normalizarTexto(prod.nombre);
+    const desc = prod.descripcion ? normalizarTexto(prod.descripcion) : "";
+    const texto = nombre + " " + desc;
+
+    const palabrasBebida = ["gaseosa", "lata", "agua", "refresco", "fresco", "licuado", "colada", "cafe", "michelada", "pepsi", "coca", "jugo", "te", "bebida", "ting", "sprite", "fanta", "salvavidas", "cerveza"];
+    const palabrasComplemento = ["papa", "papas", "ensalada", "porcion", "longaniza", "mushque", "chicharron", "extra", "pastelito", "canelitas"];
+
+    if (palabrasBebida.some(p => texto.includes(p))) return "bebidas";
+    if (palabrasComplemento.some(p => texto.includes(p))) return "complementos";
+    return "menus";
+}
+
+function cambiarSubcategoria(subcat) {
+    subcategoriaActiva = subcat;
+    renderizarMenuConSubcategorias(restauranteActual);
+}
+
 function abrirMenu(nombreRestaurante) {
     restauranteActual = nombreRestaurante;
     document.getElementById('titulo-restaurante').textContent = nombreRestaurante;
+    subcategoriaActiva = 'menus';
 
     const infoBox = document.getElementById("info-negocio-box");
     const datosNegocio = infoRestaurantes[nombreRestaurante];
@@ -573,11 +589,57 @@ function abrirMenu(nombreRestaurante) {
         }
     }
 
+    renderizarMenuConSubcategorias(nombreRestaurante);
+    cambiarVista('menu');
+}
+
+function renderizarMenuConSubcategorias(nombreRestaurante) {
+    let tabsContainer = document.getElementById('subcategorias-container');
+    if (!tabsContainer) {
+        tabsContainer = document.createElement('div');
+        tabsContainer.id = 'subcategorias-container';
+        const listaProd = document.getElementById('lista-productos');
+        listaProd.parentNode.insertBefore(tabsContainer, listaProd);
+    }
+
+    const productos = menus[nombreRestaurante] || [];
+
+    // Verificar si el negocio actual pertenece a la categoría "restaurantes"
+    const esRestaurante = negociosPorCategoria["restaurantes"] && 
+                          negociosPorCategoria["restaurantes"].some(t => t.nombre === nombreRestaurante);
+
+    if (esRestaurante) {
+        // Solo mostrar pestañas si es un restaurante
+        tabsContainer.style.display = "block";
+        tabsContainer.innerHTML = `
+            <div class="subcategorias-tabs">
+                <button class="tab-subcat ${subcategoriaActiva === 'menus' ? 'active' : ''}" onclick="cambiarSubcategoria('menus')">🍽️ Menús</button>
+                <button class="tab-subcat ${subcategoriaActiva === 'bebidas' ? 'active' : ''}" onclick="cambiarSubcategoria('bebidas')">🥤 Bebidas</button>
+                <button class="tab-subcat ${subcategoriaActiva === 'complementos' ? 'active' : ''}" onclick="cambiarSubcategoria('complementos')">🍟 Complementos</button>
+            </div>
+        `;
+    } else {
+        // En farmacias, motos, hogar, etc., ocultamos las pestañas
+        tabsContainer.style.display = "none";
+        tabsContainer.innerHTML = "";
+    }
+
+    // Si es restaurante, filtramos por pestaña; si es otro negocio, mostramos todos los productos directamente
+    const productosFiltrados = esRestaurante 
+        ? productos.filter(prod => obtenerSubcategoria(prod) === subcategoriaActiva)
+        : productos;
+
     const contenedor = document.getElementById('lista-productos');
     contenedor.innerHTML = "";
 
-    const productos = menus[nombreRestaurante] || [];
-    productos.forEach((prod, index) => {
+    if (productosFiltrados.length === 0) {
+        contenedor.innerHTML = `<p style="text-align:center; grid-column: 1/-1; padding: 30px; color: #666;">No hay elementos en esta sección.</p>`;
+        return;
+    }
+
+    productosFiltrados.forEach((prod) => {
+        const indexReal = productos.findIndex(p => p.nombre === prod.nombre && p.precio === prod.precio);
+
         const descHtml = prod.descripcion ? `<div class="producto-desc">${prod.descripcion}</div>` : '';
         const etiquetaProdHtml = prod.etiqueta ? `<span class="badge-pedido" style="margin-bottom: 4px; display: inline-block;">${prod.etiqueta}</span><br>` : '';
         
@@ -585,8 +647,8 @@ function abrirMenu(nombreRestaurante) {
         if (prod.opciones && prod.opciones.length > 0) {
             opcionesHtml = `
                 <div style="margin: 6px 0;">
-                    <label style="font-size: 11px; font-weight: bold; color: #555;">Elige opción:</label>
-                    <select id="opcion-${index}" style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #ccc; font-size: 12px;">
+                    <label style="font-size: 10px; font-weight: bold; color: #555;">Elige opción:</label>
+                    <select id="opcion-${indexReal}" style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px;">
                         ${prod.opciones.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
                     </select>
                 </div>
@@ -595,21 +657,21 @@ function abrirMenu(nombreRestaurante) {
 
         contenedor.innerHTML += `
             <div class="producto-card">
-                <div class="producto-detalle">
-                    <img src="${prod.imagen}" alt="${prod.nombre}" class="producto-img">
+                <div>
+                    ${etiquetaProdHtml}
+                    <img src="${prod.imagen || 'img/placeholder.webp'}" alt="${prod.nombre}" class="producto-img">
                     <div class="producto-info">
-                        ${etiquetaProdHtml}
                         <h4>${prod.nombre}</h4>
                         ${descHtml}${opcionesHtml}
-                        <p>Q${prod.precio}.00</p>
                     </div>
                 </div>
-                <button class="btn-agregar" onclick="agregarConOpcion('${prod.nombre}', ${prod.precio}, ${index})">+ Agregar</button>
+                <div class="producto-footer">
+                    <p>Q${prod.precio}.00</p>
+                    <button class="btn-agregar" onclick="agregarConOpcion('${prod.nombre}', ${prod.precio}, ${indexReal})">+</button>
+                </div>
             </div>
         `;
     });
-
-    cambiarVista('menu');
 }
 
 function agregarConOpcion(nombre, precio, indexProd) {
@@ -729,7 +791,6 @@ function verDetalleCarrito() {
     }
 }
 
-// FUNCIÓN DE ENVÍO CON GUARDADO AUTOMÁTICO EN REALTIME DATABASE
 async function enviarAWhatsApp() {
     const nombreInput = document.getElementById('cliente-nombre');
     const direccionInput = document.getElementById('cliente-direccion');
@@ -765,7 +826,6 @@ async function enviarAWhatsApp() {
     const restNombre = carrito[0].restaurante;
     let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
 
-    // 1. GUARDAR PEDIDO EN REALTIME DATABASE
     try {
         const pedidosRef = ref(db, 'pedidos');
         await push(pedidosRef, {
@@ -783,7 +843,6 @@ async function enviarAWhatsApp() {
         console.error("Error al guardar en la base de datos: ", error);
     }
 
-  // 2. CONSTRUIR MENSAJE PARA WHATSAPP
     let subtotal = typeof total !== 'undefined' ? total : carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     let descuento = typeof descuentoAplicado !== 'undefined' ? descuentoAplicado : 0;
     let totalFinal = subtotal - descuento;
@@ -794,15 +853,14 @@ async function enviarAWhatsApp() {
     mensaje += ` *Dirección:* ${direccion}\n`;
     if (referencia) {    
         mensaje += ` *Referencia:* ${referencia}\n`;
-        mensaje += ` 💳 *Forma de Pago:* ${formaPago}\n`;
     }
+    mensaje += ` 💳 *Forma de Pago:* ${formaPago}\n`;
     mensaje += `\n*Detalle del Pedido:*\n`;
 
     carrito.forEach(item => {
         mensaje += `• ${item.cantidad}x ${item.nombre} (Q${(item.precio * item.cantidad).toFixed(2)})\n`;
     });
 
-    // Subtotal y Descuento por Cupón
     mensaje += `\n *Subtotal Productos:* Q${subtotal}.00\n`;
     
     if (descuento > 0) {
@@ -810,12 +868,11 @@ async function enviarAWhatsApp() {
         mensaje += ` *Total Final con Descuento:* Q${totalFinal}.00\n`;
     }
 
-    // Información de Envío
     const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
     mensaje += esGratis ? ` *Envío:* GRATIS\n` : ` *Envío:* Pendiente de calcular según ubicación\n`;
 
     mensaje += `\n¡Quedo a la espera!`;
-    // 3. LIMPIAR CARRITO Y ABRIR WHATSAPP
+    
     carrito = [];
     localStorage.removeItem('dash_carrito_502');
     actualizarTotal();
@@ -824,7 +881,6 @@ async function enviarAWhatsApp() {
     window.open(urlWhatsApp, '_blank');
 }
 
-// Hacer globales las funciones que usa el HTML en los eventos onclick
 window.irACategoria = irACategoria;
 window.volverAPanelPrincipal = volverAPanelPrincipal;
 window.volverANegocios = volverANegocios;
@@ -837,15 +893,15 @@ window.eliminarDelCarrito = eliminarDelCarrito;
 window.abrirModalCarrito = abrirModalCarrito;
 window.cerrarModalCarrito = cerrarModalCarrito;
 window.enviarAWhatsApp = enviarAWhatsApp;
+window.cambiarSubcategoria = cambiarSubcategoria;
 
 window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
     cargarCarritoGuardado();
 });
-// Variable global para controlar el descuento aplicado
+
 let descuentoAplicado = 0;
 
-// Función para validar y aplicar el cupón de descuento en Firebase
 async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauranteActual) {
     const user = auth.currentUser;
 
@@ -855,8 +911,6 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
     }
 
     const codigoLimpio = codigoIngresado.trim().toUpperCase();
-
-    // 1. Obtener datos del cupón desde Firebase
     const snapshotCupon = await get(ref(db, `cupones/${codigoLimpio}`));
     
     if (!snapshotCupon.exists()) {
@@ -871,13 +925,11 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
         return 0;
     }
 
-    // 2. Validar restaurante afiliado (asegurando comparación exacta en mayúsculas)
     if (cupon.restaurante.trim().toUpperCase() !== restauranteActual.trim().toUpperCase()) {
         alert(`Este cupón solo es válido para pedidos en ${cupon.restaurante}.`);
         return 0;
     }
 
-    // 3. Validar Fecha de Expiración
     const hoy = new Date();
     const fechaLimite = new Date(cupon.fechaExpiracion + "T23:59:59");
     if (hoy > fechaLimite) {
@@ -885,13 +937,11 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
         return 0;
     }
 
-    // 4. Validar Mínimo de Compra (Q50.00)
     if (subtotalCarrito < cupon.minimoCompra) {
         alert(`El consumo mínimo para aplicar este cupón es de Q${cupon.minimoCompra}.00`);
         return 0;
     }
 
-    // 5. Validar si la cuenta del dispositivo ya usó el cupón
     const snapshotUser = await get(ref(db, `usuarios/${user.uid}`));
     if (snapshotUser.exists() && snapshotUser.val().primerPedidoRealizado) {
         alert("Este cupón solo puede ser utilizado en tu primer pedido.");
@@ -902,14 +952,9 @@ async function aplicarCuponDescuento(codigoIngresado, subtotalCarrito, restauran
     return cupon.descuento;
 }
 
-// Función puente conectada al botón "Aplicar"
 async function manejarAplicarCupon() {
     const inputCodigo = document.getElementById("input-cupon").value;
-    
-    // Calculamos el subtotal actual de los productos en el carrito
     let subtotalActual = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    
-    // Detectamos el restaurante del primer producto del carrito
     let restauranteActual = carrito.length > 0 ? carrito[0].restaurante : ""; 
 
     const descuento = await aplicarCuponDescuento(inputCodigo, subtotalActual, restauranteActual);
@@ -917,7 +962,6 @@ async function manejarAplicarCupon() {
     if (descuento > 0) {
         descuentoAplicado = descuento;
         
-        // Bloquear los controles del cupón
         document.getElementById("input-cupon").disabled = true;
         const btnAplicar = document.getElementById("btn-aplicar-cupon");
         btnAplicar.disabled = true;
@@ -925,7 +969,6 @@ async function manejarAplicarCupon() {
         btnAplicar.style.backgroundColor = "#28a745";
         btnAplicar.style.color = "#fff";
 
-        // Mostrar el desglose actualizado en pantalla
         let totalFinal = subtotalActual - descuentoAplicado;
         const cajaResumen = document.getElementById("resumen-cupon-box");
         if (cajaResumen) {
@@ -933,9 +976,8 @@ async function manejarAplicarCupon() {
         }
     }
 }
-// Exponer las funciones al ámbito global para que los eventos onclick del HTML puedan verlas
+
 window.manejarAplicarCupon = manejarAplicarCupon;
-window.enviarAWhatsApp = enviarAWhatsApp;
 
 document.addEventListener("DOMContentLoaded", () => {
     const btnCupon = document.getElementById("btn-aplicar-cupon");
