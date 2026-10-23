@@ -332,7 +332,9 @@ function cambiarVista(nuevaVista, push = true) {
     const seccionRestaurantes = document.getElementById('seccion-restaurantes');
     const seccionMenu = document.getElementById('seccion-menu');
     const modalCarrito = document.getElementById('modal-carrito');
+    const seccionMandados = document.getElementById('seccion-mandados');
 
+    if (seccionMandados) seccionMandados.style.display = 'none';
     panelPrincipal.style.display = 'none';
     seccionRestaurantes.style.display = 'none';
     seccionMenu.style.display = 'none';
@@ -346,8 +348,12 @@ function cambiarVista(nuevaVista, push = true) {
     } else if (nuevaVista === 'menu') {
         seccionMenu.style.display = 'block';
         modalCarrito.style.display = 'none';
+    } else if (nuevaVista === 'mandados') {
+        if (seccionMandados) seccionMandados.style.display = 'block';
+        modalCarrito.style.display = 'none';
     } else if (nuevaVista === 'carrito') {
         if (vistaActual === 'menu') seccionMenu.style.display = 'block';
+        else if (vistaActual === 'mandados' && seccionMandados) seccionMandados.style.display = 'block';
         else if (vistaActual === 'restaurantes') seccionRestaurantes.style.display = 'block';
         else panelPrincipal.style.display = 'block';
 
@@ -985,3 +991,104 @@ document.addEventListener("DOMContentLoaded", () => {
         btnCupon.addEventListener("click", manejarAplicarCupon);
     }
 });
+// Abrir vista de Mandados
+function abrirSeccionMandados() {
+    const panelPrincipal = document.getElementById('seccion-panel-principal');
+    const seccionRestaurantes = document.getElementById('seccion-restaurantes');
+    const seccionMenu = document.getElementById('seccion-menu');
+    const seccionMandados = document.getElementById('seccion-mandados');
+
+    panelPrincipal.style.display = 'none';
+    seccionRestaurantes.style.display = 'none';
+    seccionMenu.style.display = 'none';
+    
+    if (seccionMandados) {
+        seccionMandados.style.display = 'block';
+    }
+
+    history.pushState({ vista: 'mandados' }, '', '#mandados');
+}
+
+// Evaluar si se selecciona hora programada
+function evaluarTipoEntrega() {
+    const tipo = document.getElementById('mandado-tipo-entrega').value;
+    const boxHora = document.getElementById('box-hora-programada');
+    if (tipo === 'Programado') {
+        boxHora.style.display = 'block';
+        document.getElementById('mandado-hora-programada').required = true;
+    } else {
+        boxHora.style.display = 'none';
+        document.getElementById('mandado-hora-programada').required = false;
+    }
+}
+
+// Enviar solicitud de mandado por WhatsApp y guardar en Firebase
+async function enviarMandadoAWhatsApp(e) {
+    e.preventDefault();
+
+    const nombre = document.getElementById('mandado-nombre').value.trim();
+    const telefono = document.getElementById('mandado-telefono').value.trim();
+    const tipoEntrega = document.getElementById('mandado-tipo-entrega').value;
+    const horaProgramada = document.getElementById('mandado-hora-programada').value;
+    const origen = document.getElementById('mandado-origen').value.trim();
+    const destino = document.getElementById('mandado-destino').value.trim();
+    const detalle = document.getElementById('mandado-detalle').value.trim();
+    const aceptoReglas = document.getElementById('check-reglas').checked;
+
+    if (!aceptoReglas) {
+        alert("Debes aceptar los términos y condiciones del servicio de encargos.");
+        return;
+    }
+
+    let modalidadEntregaTxt = tipoEntrega;
+    if (tipoEntrega === 'Programado' && horaProgramada) {
+        modalidadEntregaTxt = `📅 Programado (Hora: ${horaProgramada})`;
+    } else {
+        modalidadEntregaTxt = `⚡ Inmediato (Lo antes posible)`;
+    }
+
+    // Código de seguimiento de mandado
+    const codigoMandado = "MND-" + Math.floor(1000 + Math.random() * 9000);
+
+    // Guardar en Firebase Realtime Database
+    try {
+        const mandadosRef = ref(db, 'encargos_mandados');
+        await push(mandadosRef, {
+            codigo: codigoMandado,
+            clienteNombre: nombre,
+            clienteTelefono: telefono,
+            modalidad: modalidadEntregaTxt,
+            origen: origen,
+            destino: destino,
+            detalle: detalle,
+            fechaSolicitud: new Date().toISOString(),
+            estado: "Pendiente de Cotización"
+        });
+    } catch (error) {
+        console.error("Error guardando mandado en BD:", error);
+    }
+
+    // Estructurar Mensaje de WhatsApp
+    let mensaje = `*🛵 SOLICITUD DE ENCARGO Y MANDADO (${codigoMandado})*\n\n`;
+    mensaje += `👤 *Cliente:* ${nombre}\n`;
+    mensaje += `📞 *Teléfono:* ${telefono}\n`;
+    mensaje += `⏰ *Modalidad:* ${modalidadEntregaTxt}\n\n`;
+    mensaje += `📍 *Punto de Recolección (Origen):*\n${origen}\n\n`;
+    mensaje += `🏠 *Punto de Entrega (Destino):*\n${destino}\n\n`;
+    mensaje += `📦 *Detalle del Encargo:*\n${detalle}\n\n`;
+    mensaje += `✅ *Aceptó normas (<=4lbs, dimensiones y no prohibidos):* Sí\n\n`;
+    mensaje += `Quedo a la espera de la cotización de la tarifa de envío.`;
+
+    const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+    
+    // Limpiar formulario
+    document.getElementById('form-mandados').reset();
+    document.getElementById('box-hora-programada').style.display = 'none';
+
+    window.open(urlWhatsApp, '_blank');
+}
+
+// Al final de tu main.js, registra las funciones públicas:
+window.abrirSeccionMandados = abrirSeccionMandados;
+window.evaluarTipoEntrega = evaluarTipoEntrega;
+window.enviarMandadoAWhatsApp = enviarMandadoAWhatsApp;

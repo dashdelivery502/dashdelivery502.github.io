@@ -51,43 +51,48 @@
             <div class="grid-panel-inicio">
                 <div class="card-categoria-principal" onclick="irACategoria('restaurantes')">
                     <div class="icono">
+                        </div>
                         <img src="img/restaurantes.webp" alt="Restaurantes" class="img-icono-categoria">
-                    </div>
                     <h3>Restaurantes y Antojos</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('farmacia')">
                     <div class="icono">
+                        </div>
                         <img src="img/farmacia.webp" alt="Farmacia" class="img-icono-categoria">
-                    </div>
                     <h3>Farmacia y Bienestar</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('mercado')">
                     <div class="icono">
+                        </div>
                         <img src="img/mercado.webp" alt="Mercado" class="img-icono-categoria">
-                    </div>
                     <h3>Mercado</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('vehiculos')">
                     <div class="icono">
+                        </div>
                         <img src="img/vehiculos.webp" alt="Vehículos" class="img-icono-categoria">
-                    </div>
                     <h3>Vehículos</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('hogar')">
-                    <div class="icono">
+                    <div class="icono"> 
+                        </div>
                         <img src="img/hogar.webp" alt="Prendas y Hogar" class="img-icono-categoria">
-                    </div>
                     <h3>Prendas y Hogar</h3>
+                </div>
+
+                <div class="card-categoria-principal" onclick="abrirSeccionMandados()">
+                     <img src="img/mandados.webp" alt="Encargos y Mandados" class="img-icono-categoria">
+                     <h3>Encargos y Mandados</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('otros')">
                     <div class="icono">
+                        </div>
                         <img src="img/otros.webp" alt="Otros Servicios" class="img-icono-categoria">
-                    </div>
                     <h3>Otros</h3>
                 </div>
             </div>
@@ -114,6 +119,71 @@
             <div id="lista-productos"></div>
         </div>
     </div>
+    <!-- SECCIÓN ENCARGOS Y MANDADOS -->
+<div id="seccion-mandados" class="menu-seccion" style="display: none;">
+    <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver al Inicio</button>
+    
+    <!-- Barra Destacada de Tarifas e Información -->
+    <div class="banner-mandados-promo">
+        🚀 <span>Encargos y mandados rápidos desde <strong>Q8.00</strong></span>
+    </div>
+
+    <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;">🛵 Encargos y Mandados</h2>
+    <p style="text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 15px;">Servicio express local de 9:00 AM a 6:00 PM</p>
+
+    <!-- Reglas y Condiciones del Servicio -->
+    <div class="reglas-mandados-box">
+        <h4>📋 Condiciones del Servicio</h4>
+        <ul>
+            <li>⏰ <strong>Horario de atención:</strong> 9:00 AM a 6:00 PM (Inmediato o programado).</li>
+            <li>📦 <strong>Dimensiones máximas:</strong> 30cm x 30cm x 40cm.</li>
+            <li>⚖️ <strong>Peso máximo:</strong> Hasta 4 lbs por envío.</li>
+            <li>🚫 <strong>Prohibidos:</strong> No se transportan armas, sustancias ilícitas ni químicos peligrosos.</li>
+            <li>💵 <strong>Compras:</strong> No realizamos compras a nombre de la empresa ni financiamiento.</li>
+            <li>📍 <strong>Seguridad:</strong> No se realizan entregas en zonas de alto riesgo o despobladas.</li>
+        </ul>
+    </div>
+
+    <!-- Formulario de Solicitud -->
+    <form id="form-mandados" onsubmit="enviarMandadoAWhatsApp(event)" class="datos-cliente" style="margin-top: 20px;">
+        <h4>Llena los datos de tu encargo:</h4>
+
+        <label class="label-form">Tu Nombre Completo *</label>
+        <input type="text" id="mandado-nombre" placeholder="Ej. Juan Pérez" required>
+
+        <label class="label-form">Teléfono de Contacto *</label>
+        <input type="tel" id="mandado-telefono" placeholder="Ej. 55554444" required>
+
+        <label class="label-form">Tipo de Entrega *</label>
+        <select id="mandado-tipo-entrega" class="input-select-mandado" onchange="evaluarTipoEntrega()" required>
+            <option value="Inmediato (Hoy)">⚡ Lo antes posible (Inmediato)</option>
+            <option value="Programado">📅 Programar para más tarde (9am - 6pm)</option>
+        </select>
+
+        <div id="box-hora-programada" style="display: none; margin-bottom: 12px;">
+            <label class="label-form">Hora programada (Entre 9:00 AM y 6:00 PM) *</label>
+            <input type="time" id="mandado-hora-programada" min="09:00" max="18:00">
+        </div>
+
+        <label class="label-form">Punto de Recolección (Origen) *</label>
+        <input type="text" id="mandado-origen" placeholder="Ej. Traer llaves de Casa de mi mamá (Dirección exacta)" required>
+
+        <label class="label-form">Punto de Entrega (Destino) *</label>
+        <input type="text" id="mandado-destino" placeholder="Ej. Entregar en mi negocio en el Barrio El Centro" required>
+
+        <label class="label-form">Detalle del Encargo / Paquete *</label>
+        <textarea id="mandado-detalle" class="input-textarea-mandado" placeholder="Ej. Una carpeta con documentos pequeños y un cargador." required></textarea>
+
+        <div class="checkbox-reglas-container">
+            <input type="checkbox" id="check-reglas" required>
+            <label for="check-reglas">Confirmo que mi paquete cumple con el peso (< 4 lbs), dimensiones y acepto los términos del servicio.</label>
+        </div>
+
+        <button type="submit" class="btn-pedir-whatsapp" style="margin-top: 15px;">
+            📲 Solicitar Cotización de Encargo
+        </button>
+    </form>
+</div>
 
     <!-- Barra Inferior del Carrito -->
     <div class="carrito-bar">
