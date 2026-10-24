@@ -830,55 +830,74 @@ async function enviarAWhatsApp() {
     }
 
     const restNombre = carrito[0].restaurante;
-    let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-
-    try {
-        const pedidosRef = ref(db, 'pedidos');
-        await push(pedidosRef, {
-            restaurante: restNombre,
-            clienteNombre: nombre,
-            clienteDireccion: direccion,
-            clienteReferencia: referencia || "Sin referencia",
-            productos: carrito,
-            subtotal: total,
-            fechaPedido: new Date().toISOString(),
-            estado: "Pendiente"
-        });
-        console.log("Pedido guardado en Realtime Database con éxito");
-    } catch (error) {
-        console.error("Error al guardar en la base de datos: ", error);
-    }
-
-    let subtotal = typeof total !== 'undefined' ? total : carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    let subtotal = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     let descuento = typeof descuentoAplicado !== 'undefined' ? descuentoAplicado : 0;
     let totalFinal = subtotal - descuento;
 
-    let mensaje = `*¡Nuevo Pedido en Dash Delivery 502!* \n\n`;
-    mensaje += ` *Negocio:* ${restNombre}\n`;
-    mensaje += ` *Cliente:* ${nombre}\n`;
-    mensaje += ` *Dirección:* ${direccion}\n`;
-    if (referencia) {    
-        mensaje += ` *Referencia:* ${referencia}\n`;
+    // Validar si el restaurante tiene envío gratis por defecto
+    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
+
+    // Determinar si se debe cobrar el producto en destino según la forma de pago
+    // Si paga con tarjeta o transferencia, ya está pagado ('no'). Si es efectivo, se cobra ('si').
+    const esEfectivo = formaPago.toLowerCase().includes('efectivo');
+    const cobrarProducto = esEfectivo ? 'si' : 'no';
+
+    // Construir el detalle del contenido del carrito para el panel
+    let detalleContenido = carrito.map(item => `${item.cantidad}x ${item.nombre}`).join(', ');
+
+    // Estructura exacta que espera 'index.html' (Dash Conductor / Gestor)
+    const nuevaOrdenFirebase = {
+        id: Math.floor(1000 + Math.random() * 9000).toString(),
+        date: new Date().toISOString().slice(0, 10),
+        timestamp: Date.now(),
+        client: nombre,
+        address: direccion,
+        restaurant: restNombre,
+        description: detalleContenido,
+        notes: referencia ? `Ref: ${referencia} | Pago: ${formaPago}` : `Pago: ${formaPago}`,
+        productPrice: totalFinal,
+        productCollect: cobrarProducto,
+        shippingPrice: esGratis ? 0.00 : 20.00, // Tarifa base que el gestor podrá ajustar si es necesario
+        payer: esGratis ? 'restaurante' : 'cliente',
+        driver: 'Carlos Villalobos', // Conductor predeterminado inicial que el gestor puede reasignar
+        status: 'Pendiente'
+    };
+
+    try {
+        // Guardar directamente en la ruta 'orders' que escucha index.html
+        const ordersRef = ref(db, 'orders');
+        await push(ordersRef, nuevaOrdenFirebase);
+        console.log("Orden sincronizada correctamente con Dash Conductor");
+    } catch (error) {
+        console.error("Error al sincronizar con Firebase:", error);
     }
-    mensaje += ` 💳 *Forma de Pago:* ${formaPago}\n`;
+
+    // Construcción del mensaje de WhatsApp para el negocio
+    let mensaje = `*¡Nuevo Pedido en Dash Delivery 502!* (#${nuevaOrdenFirebase.id})\n\n`;
+    mensaje += `🏪 *Negocio:* ${restNombre}\n`;
+    mensaje += `👤 *Cliente:* ${nombre}\n`;
+    mensaje += `📍 *Dirección:* ${direccion}\n`;
+    if (referencia) {    
+        mensaje += `🏠 *Referencia:* ${referencia}\n`;
+    }
+    mensaje += `💳 *Forma de Pago:* ${formaPago}\n`;
     mensaje += `\n*Detalle del Pedido:*\n`;
 
     carrito.forEach(item => {
         mensaje += `• ${item.cantidad}x ${item.nombre} (Q${(item.precio * item.cantidad).toFixed(2)})\n`;
     });
 
-    mensaje += `\n *Subtotal Productos:* Q${subtotal}.00\n`;
+    mensaje += `\n💰 *Subtotal Productos:* Q${subtotal}.00\n`;
     
     if (descuento > 0) {
-        mensaje += ` *Descuento (Cupón):* -Q${descuento}.00\n`;
-        mensaje += ` *Total Final con Descuento:* Q${totalFinal}.00\n`;
+        mensaje += `🏷️ *Descuento (Cupón):* -Q${descuento}.00\n`;
+        mensaje += `💵 *Total Final con Descuento:* Q${totalFinal}.00\n`;
     }
 
-    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
-    mensaje += esGratis ? ` *Envío:* GRATIS\n` : ` *Envío:* Pendiente de calcular según ubicación\n`;
-
-    mensaje += `\n¡Quedo a la espera!`;
+    mensaje += esGratis ? `🚚 *Envío:* GRATIS\n` : `🚚 *Envío:* Pendiente de calcular según ubicación\n`;
+    mensaje += `\n¡Quedo a la espera de la confirmación!`;
     
+    // Limpiar carrito local
     carrito = [];
     localStorage.removeItem('dash_carrito_502');
     actualizarTotal();
