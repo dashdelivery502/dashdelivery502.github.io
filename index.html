@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="icono-192.png">
 
     <meta property="og:site_name" content="Dash Delivery 502">
-    <meta property="og:title" content="Dash Delivery 502 | Envíos y Pedidos en Santa Rosa">
+    <meta property="og:title" content="Dash Delivery 502">
     <meta property="og:type" content="website">
 
     <script type="application/ld+json">
@@ -37,11 +37,10 @@
 
     <header>
         <h1>Dash Delivery 502</h1>
-        <p>Envíos y Pedidos Rápidos en Santa Rosa</p>
     </header>
 
     <div class="banner-publicidad">
-        <input type="text" id="buscador-restaurante" placeholder="🔍 Buscar negocio o comida..." oninput="buscarRestaurante()">
+        <input type="text" id="buscador-restaurante" placeholder="Buscar negocio o comida..." oninput="buscarRestaurante()">
     </div>
 
     <div class="container">
@@ -52,47 +51,47 @@
                 <div class="card-categoria-principal" onclick="irACategoria('restaurantes')">
                     <div class="icono">
                         </div>
-                        <img src="img/restaurantes.webp" alt="Restaurantes" class="img-icono-categoria">
+                        <img src="img/cate1.webp" alt="Restaurantes" class="img-icono-categoria">
                     <h3>Restaurantes y Antojos</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('farmacia')">
                     <div class="icono">
                         </div>
-                        <img src="img/farmacia.webp" alt="Farmacia" class="img-icono-categoria">
+                        <img src="img/cate2.webp" alt="Farmacia" class="img-icono-categoria">
                     <h3>Farmacia y Bienestar</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('mercado')">
                     <div class="icono">
                         </div>
-                        <img src="img/mercado.webp" alt="Mercado" class="img-icono-categoria">
+                        <img src="img/cate3.webp" alt="Mercado" class="img-icono-categoria">
                     <h3>Mercado</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('vehiculos')">
                     <div class="icono">
                         </div>
-                        <img src="img/vehiculos.webp" alt="Vehículos" class="img-icono-categoria">
+                        <img src="img/cate4.webp" alt="Vehículos" class="img-icono-categoria">
                     <h3>Vehículos</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('hogar')">
                     <div class="icono"> 
                         </div>
-                        <img src="img/hogar.webp" alt="Prendas y Hogar" class="img-icono-categoria">
+                        <img src="img/cate5.webp" alt="Prendas y Hogar" class="img-icono-categoria">
                     <h3>Prendas y Hogar</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="abrirSeccionMandados()">
-                     <img src="img/mandados.webp" alt="Encargos y Mandados" class="img-icono-categoria">
+                     <img src="img/cate6.webp" alt="Encargos y Mandados" class="img-icono-categoria">
                      <h3>Encargos y Mandados</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('otros')">
                     <div class="icono">
                         </div>
-                        <img src="img/otros.webp" alt="Otros Servicios" class="img-icono-categoria">
+                        <img src="img/cate7.webp" alt="Otros Servicios" class="img-icono-categoria">
                     <h3>Otros</h3>
                 </div>
             </div>
@@ -100,14 +99,14 @@
 
         <!-- Vista de Negocios por Categoría -->
         <div id="seccion-restaurantes" style="display: none;">
-            <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver a Categorías</button>
+            <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver </button>
             <h2 class="seccion-titulo" id="titulo-categoria-activa">Negocios Disponibles</h2>
             <div class="grid-restaurantes" id="grid-restaurantes"></div>
         </div>
 
         <!-- Menú / Catálogo de Productos -->
         <div id="seccion-menu" class="menu-seccion">
-            <button class="btn-volver" onclick="volverANegocios()">← Volver a Negocios</button>
+            <button class="btn-volver" onclick="volverANegocios()">← Volver </button>
             
             <!-- Logo/Imagen superior del negocio -->
             <div id="banner-negocio-container" style="text-align: center; margin-bottom: 15px;">
@@ -122,25 +121,25 @@
     
     <!-- SECCIÓN ENCARGOS Y MANDADOS -->
     <div id="seccion-mandados" class="menu-seccion" style="display: none;">
-        <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver al Inicio</button>
+        <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver </button>
         
         <div class="banner-mandados-promo">
-            🚀 <span>Encargos y mandados rápidos con tarifa oficial + <strong>Q4.00 adicionales</strong> por gestión</span>
+            <span>Encargos y mandados rápidos + <strong>Tarifa de gestion incluida</strong> manda tu paqueteri aocn nosotros</span>
         </div>
 
-        <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;">🛵 Encargos y Mandados</h2>
+        <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;"> Encargos y Mandados</h2>
         <p style="text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 15px;">Servicio express local de 9:00 AM a 6:00 PM</p>
 
         <!-- Reglas y Condiciones del Servicio -->
         <div class="reglas-mandados-box">
-            <h4>📋 Condiciones del Servicio</h4>
+            <h4> Condiciones del Servicio</h4>
             <ul>
-                <li>⏰ <strong>Horario de atención:</strong> 9:00 AM a 6:00 PM (Inmediato o programado).</li>
-                <li>📦 <strong>Dimensiones máximas:</strong> 30cm x 30cm x 40cm.</li>
-                <li>⚖️ <strong>Peso máximo:</strong> Hasta 4 lbs por envío.</li>
-                <li>🚫 <strong>Prohibidos:</strong> No se transportan armas, sustancias ilícitas ni químicos peligrosos.</li>
-                <li>💵 <strong>Compras:</strong> No realizamos compras a nombre de la empresa ni financiamiento.</li>
-                <li>📍 <strong>Seguridad:</strong> No se realizan entregas en zonas de alto riesgo o despobladas.</li>
+                <li> <strong>Horario de atención:</strong> 9:00 AM a 6:00 PM (Inmediato o programado).</li>
+                <li> <strong>Dimensiones máximas:</strong> 30cm x 30cm x 40cm.</li>
+                <li> <strong>Peso máximo:</strong> Hasta 4 lbs por envío.</li>
+                <li> <strong>Prohibidos:</strong> No se transportan armas, sustancias ilícitas ni químicos peligrosos.</li>
+                <li>  <strong>Compras:</strong> No realizamos compras a nombre de la empresa ni financiamiento.</li>
+                <li> <strong>Seguridad:</strong> No se realizan entregas en zonas de alto riesgo o despobladas.</li>
             </ul>
         </div>
 
@@ -190,7 +189,7 @@
 
             <label class="label-form">Tipo de Entrega *</label>
             <select id="mandado-tipo-entrega" class="input-select-mandado" onchange="evaluarTipoEntrega()" required>
-                <option value="Inmediato (Hoy)">⚡ Lo antes posible (Inmediato)</option>
+                <option value="Inmediato (Hoy)"> Lo antes posible (Inmediato)</option>
                 <option value="Programado">📅 Programar para más tarde (9am - 6pm)</option>
             </select>
 
@@ -214,7 +213,7 @@
             </div>
 
             <button type="submit" class="btn-pedir-whatsapp" style="margin-top: 15px;">
-                📲 Solicitar Encargo
+                 Solicitar Encargo
             </button>
         </form>
     </div>

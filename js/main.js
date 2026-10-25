@@ -36,13 +36,13 @@ const NUMERO_WHATSAPP = "50253062335";
 
 const negociosPorCategoria = {
     "restaurantes": [
-        { nombre: "CEVICHES FISH EXPRESS", envioGratis: true, img: "https://i.ibb.co/qMC0wHPv/Gemini-Generated-Image-juo5lgjuo5lgjuo5.jpg" },
-        { nombre: "TAQUERO MUCHO", envioGratis: true, img: "https://tse3.mm.bing.net/th/id/OIP.qe7T7Csz67hNeMv8u4vGqwHaLH?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "POLLO DELY ROSY", envioGratis: true, img: "https://i.pinimg.com/736x/18/4f/c4/184fc416f0e739d24fa767f4ce1fb717.jpg" },
-        { nombre: "LA SICILIANA", envioGratis: false, img: "https://tse1.mm.bing.net/th/id/OIP.wTIHkJCHLmqCnBpLtw7vvwHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "POLLO GRANJERO", envioGratis: false, img: "https://tse2.mm.bing.net/th/id/OIP.o0i_j3gt56YaiL7XiTpfgAHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "DOMINOS EXPRESS", envioGratis: false, img: "https://tse4.mm.bing.net/th/id/OIP.y0F_StlyjW83DR4e5klmZwHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
-        { nombre: "CARNITAS EL GORDO", envioGratis: false, img: "https://static.vecteezy.com/system/resources/previews/048/006/291/large_2x/pork-dumplings-chef-free-vector.jpg" },
+        { nombre: "CEVICHES FISH EXPRESS", envioGratis: true, img: "img/fish.webp" },
+        { nombre: "TAQUERO MUCHO", envioGratis: true, img: "img/taquero1.webp" },
+        { nombre: "POLLO DELY ROSY", envioGratis: true, img: "img/rosy.webp" },
+        { nombre: "LA SICILIANA", envioGratis: false, img: "img/lasici1.webp" },
+        { nombre: "POLLO GRANJERO", envioGratis: false, img: "img/granjero.webp" },
+        { nombre: "DOMINOS EXPRESS", envioGratis: false, img:  "img/dominos.webp" },
+        { nombre: "CARNITAS EL GORDO", envioGratis: false, img: "img/katy.webp" },
         { nombre: "LA NEVERIA", envioGratis: false, img: "img/neveria.webp" },
         { nombre: "HOLANDESA", envioGratis: false, img: "img/holandesa.webp" }
     ],
@@ -56,14 +56,14 @@ const negociosPorCategoria = {
         { nombre: "MERCADITO ORIENTE", envioGratis: false, img: "https://www.creativefabrica.com/wp-content/uploads/2024/12/09/Modern-Ecommerce-Website-Logo-SVG-Vector-Graphics-111628754-1-580x387.jpg" }
     ],
     "vehiculos": [
-        { nombre: "MOTOS HONDA", envioGratis: true, img: "https://toppng.com/uploads/thumbnail/honda-logo-11540236620o3erbhp25m.png" }
+        { nombre: "MOTOS HONDA", envioGratis: true, img: "img/honda.webp" }
     ],
     "hogar": [
         { nombre: "TOTALPLAST", envioGratis: true, img: "img/plast.webp" },
         { nombre: "1VEA HOGAR", envioGratis: true, img: "img/1vea.webp" }
     ],
     "otros": [
-        { nombre: "GRAN BAZAR", envioGratis: true, img: "img/bazar.webp" }
+        { nombre: "GRAN BAZAR", envioGratis: true, img: "img/bazar2.webp" }
     ]
 };
 
@@ -399,9 +399,9 @@ function renderizarTiendas(tiendas) {
     grid.innerHTML = "";
 
     tiendas.forEach(tienda => {
-        let badgeText = tienda.envioGratis ? '🚚 Envío Gratis' : '🚚 Envío con Costo';
+        let badgeText = tienda.envioGratis ? 'Envío Gratis' : 'Envío con Costo';
         let badgeClass = tienda.envioGratis ? 'badge-gratis' : 'badge-costo';
-        let badgePedidoHtml = tienda.bajoPedido ? `<span class="badge-pedido">📦 Bajo Pedido (7 días)</span>` : '';
+        let badgePedidoHtml = tienda.bajoPedido ? `<span class="badge-pedido"> Bajo Pedido (7 días)</span>` : '';
 
         grid.innerHTML += `
             <div class="card-restaurante" onclick="abrirMenu('${tienda.nombre}')">
@@ -860,7 +860,7 @@ async function enviarAWhatsApp() {
     // Estructura para sincronizar con el panel del gestor/conductor
     const nuevaOrdenFirebase = {
         id: Math.floor(1000 + Math.random() * 9000).toString(),
-        date: new Date().toISOString().slice(0, 10),
+        date: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`,
         timestamp: Date.now(),
         client: nombre,
         address: `${direccion} (${zonaSeleccionada})`,
