@@ -42,7 +42,7 @@ const negociosPorCategoria = {
         { nombre: "LA SICILIANA", envioGratis: false, img: "img/lasici1.webp" },
         { nombre: "POLLO GRANJERO", envioGratis: false, img: "img/granjero.webp" },
         { nombre: "DOMINOS EXPRESS", envioGratis: false, img:  "img/dominos.webp" },
-        { nombre: "CARNITAS EL GORDO", envioGratis: false, img: "img/katy.webp" },
+        { nombre: "CHICHARRONERIA KATY", envioGratis: false, img: "img/katy.webp" },
         { nombre: "LA NEVERIA", envioGratis: false, img: "img/neveria.webp" },
         { nombre: "HOLANDESA", envioGratis: false, img: "img/holandesa.webp" }
     ],
@@ -74,7 +74,7 @@ const infoRestaurantes = {
     "LA SICILIANA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-8pm" },
     "POLLO GRANJERO": { envioGratis: false, mensajeInfo: "Horario delivery 9am-6pm" },
     "DOMINOS EXPRESS": { envioGratis: false, mensajeInfo: "Horario delivery 8am-8pm"},
-    "CARNITAS EL GORDO": { envioGratis: false },
+    "CHICHARRONERIA KATY": { envioGratis: false },
     "LA NEVERIA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-5pm"},
     "HOLANDESA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-7pm" },
     "FARMACIA MI SALUD": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q70" },
@@ -132,13 +132,20 @@ const menus = {
         { nombre: "Gaseosa en lata", precio: 8, descripcion: "Bebida gaseosa Coca Cola en lata.",opciones:["coca cola","sprite","fanta uva","fanta naranja"], imagen: "img/cocacola.webp", subcat:"bebidas" }
     ],
     "LA SICILIANA": [
-        { nombre: "Pizza Personal", precio: 15, descripcion: "Pizza individual de 4 rebanadas horneada en piedra con salsa de tomate y queso mozzarella.", imagen: "img/personal-sici.webp", subcat:"menus" },
-        { nombre: "Calzone Supremo", precio: 20, descripcion: "mas relleno, mas razones para pedirlo", imagen: "img/calzone.webp", subcat:"menus" },
-        { nombre: "Pizza Carnilover", precio: 60, descripcion: "Pizza grande cargada con pepperoni, salchicha italiana, jamón, tocino crocante y extra queso.", imagen: "img/carnilover-sici.webp",subcat:"menus" },
-        { nombre: "Pizza Hawaiana", precio: 60, descripcion: "Combinación clásica de piña caramelizada en almíbar, trozos de jamón premium y queso derretido.", imagen: "img/hawai-sici.webp" ,subcat:"menus"},
-        { nombre: "Pizza Grande Extra Queso", precio: 55, descripcion: "Pizza familiar de 8 porciones bañada en doble capa de queso mozzarella fundido.", imagen: "img/extra-queso-sici.webp",subcat:"menus" },
-        { nombre: "2 Pizzas Grandes (+ 8 Canelitas)", precio: 90, descripcion: "Super combo de 2 pizzas familiares a elección más 8 deliciosos palitroques dulces con canela.", imagen: "img/combo1-sici.webp",subcat:"menus" },
+        { nombre: "Pizza Personal", precio: 16, descripcion: "Pizza individual de 4 rebanadas con salsa de tomate y queso mozzarella.", imagen: "img/personal-sici.webp", subcat:"menus" },
+        { nombre: "Calzone Carnilover", precio: 16, descripcion: "un relleno delicioso que te hara pedir mas", imagen: "img/calzone.webp", subcat:"menus" },
+        { nombre: "Pizza Super Personal", precio: 21, descripcion: "Pizza individual de 4 rebanadas con salsa de tomate y doble queso mozzarella.", imagen: "img/personal-sici.webp", subcat:"menus" },
+        { nombre: "Calzone Supremo", precio: 21, descripcion: "mas relleno, mas razones para pedirlo", imagen: "img/calzone.webp", subcat:"menus" },
+        { nombre: "Pizza Carnilover", precio: 62, descripcion: "Pizza grande cargada con pepperoni, jamón y extra queso.", imagen: "img/carnilover-sici.webp",subcat:"menus" },
+        { nombre: "Pizza Hawaiana", precio: 57, descripcion: "Combinación de piña con trozos de jamón y queso derretido.", imagen: "img/hawai-sici.webp" ,subcat:"menus"},
+        { nombre: "Pizza Grande Extra Queso", precio: 52, descripcion: "Pizza familiar de 8 porciones bañada en doble capa de queso mozzarella fundido.", imagen: "img/extra-queso-sici.webp",subcat:"menus" },
+        { nombre: "2 Pizzas Grandes (+ 8 Canelitas)", precio: 90, descripcion: "Super combo de 2 pizzas familiares de un ingrediente más 8 deliciosos palitroques dulces con canela.", imagen: "img/combo1-sici.webp",subcat:"menus" },
+        { nombre: "Extra Queso", precio: 10, descripcion: "agrega extra queso a tu pizza grande", imagen: "img/queso.webp",subcat:"complementos" },
+        { nombre: "Canelitas bites", precio: 10, descripcion: "8 unidades te incluye un dulce de leche", imagen: "img/canelita.webp",subcat:"complementos" },
+        { nombre: "Canelitas bites", precio: 5, descripcion: "4 unidades de deliciosas canelitas", imagen: "img/canelita.webp",subcat:"complementos" },
+        { nombre: "dulce de leche", precio: 2, descripcion: "para quienes les encantan las canelitas bañadas en dulce", imagen: "img/dulce.webp",subcat:"complementos" },
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
+        { nombre: "Gaseosa en lata", precio: 6, descripcion: "gaseosa salvavidas sabor limon,uva o naranja", imagen: "https://latinshopatl.com/cdn/shop/files/Salvavidaslimon1.jpg?v=1749489837&width=1946", opciones: ["Limón", "Uva", "Naranja"],subcat:"bebidas" },
         { nombre: "1L de Pepsi", precio: 8, descripcion: "Botella desechable de 1 Litro para compartir.", imagen: "img/pepsi.webp",subcat:"bebidas" }
     ],
     "POLLO GRANJERO": [
@@ -165,14 +172,17 @@ const menus = {
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
         { nombre: "Pepsi 1 Litro", precio: 8, descripcion: "Bebida familiar refrescante Pepsi de 1 L.", imagen: "img/pepsi.webp",subcat:"bebidas" }
     ],
-    "CARNITAS EL GORDO": [
-        { nombre: "Libra de Carnitas", precio: 55,etiqueta: "disponible muy pronto", descripcion: "Carne de cerdo frita en su propia grasa bien doradita por fuera y suave por dentro", imagen: "img/carnitas.webp" },
-        { nombre: "Media Libra de Carnitas", precio: 30,etiqueta: "disponible muy pronto", descripcion: "Media libra de crujiente carnita de cerdo acompañada de rábanos picado", imagen: "img/carnitas.webp" },
-        { nombre: "Porcion de Mushque", precio: 15,etiqueta: "disponible muy pronto", descripcion: "Delicioso chicharrón picadito en pasta con especias regionales tradicionales.", imagen: "img/mushque.webp" },
-        { nombre: "Docena de Longaniza", precio: 12,etiqueta: "disponible muy pronto", descripcion: "12 longanizas asadas con hierbas aromáticas y ajo listas para disfrutar.", imagen: "img/longas.webp" },
-        { nombre: "1 litro de Pepsi", precio: 8,etiqueta: "disponible muy pronto", descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp" },
-        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp" },
-        { nombre: "gaseosa en lata", precio: 6,etiqueta: "disponible muy pronto", descripcion: "Lata personal de gaseosa salvavidas surtida.", imagen: "https://salvavidasenlinea.com.gt/wp-content/uploads/2025/01/Foto_AppTuHogar_1500px_BLUE-800x800.jpg", opciones: ["Uva", "Limón", "Naranja", "Cola"] }
+    "CHICHARRONERIA KATY": [
+        { nombre: "Chicharron 1/2 libra", precio: 34, descripcion: "1/2 libra de chicharron con jalapeño y cebolla", imagen: "img/chicharron1.webp",subcat:"menus" },
+        { nombre: "costilla con cuero", precio: 34, descripcion: "Media libra de crujiente costilla, incluye jalapeño y cebolla", imagen: "img/costilla1.webp",subcat:"menus" },
+        { nombre: "chicharron 1 libra", precio: 67, descripcion: "Delicioso chicharrón con jalapeño y cebolla", imagen: "img/chicharron1.webp",subcat:"menus" },
+        { nombre: "Costilla con cuero 1LB", precio: 67, descripcion: "1lb de crujiente costilla, incluye jalapeño y cebolla", imagen: "img/costilla1.webp" ,subcat:"menus"},
+        { nombre: "1 litro de Pepsi", precio: 8,etiqueta: "disponible muy pronto", descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp",subcat:"bebidas" },
+        { nombre: "Rabano picado", precio: 12, descripcion: "picado para complementar nuestro menu", imagen: "img/rabano.webp",subcat:"complemento" },
+        { nombre: "Chile escabeche", precio: 12, descripcion: "nuestra deliciosa receta de chile", imagen: "img/escabeche.webp",subcat:"complemento" },
+        { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
+        { nombre: "Bebida natural 550ml", precio: 12, descripcion: "refresco natural de 500ml", imagen: "img/rnatural.webp", opciones: ["cremita", "tamarindo", "jamaica"],subcat:"bebidas" },
+        { nombre: "Bebida natural 1LT", precio: 12, descripcion: "refresco natural de 1Lt", imagen: "img/rnatural.webp", opciones: ["cremita", "tamarindo", "jamaica"],subcat:"bebidas" }
     ], 
     "LA NEVERIA": [
         { nombre: "Helado wafle", precio: 14, descripcion: "cono normal con una bola de helado", imagen: "img/wafle.webp", opciones: ["Vainilla", "Chocolate", "Fresa", "napolitano"],subcat:"menus" },
