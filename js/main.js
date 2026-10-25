@@ -539,7 +539,6 @@ function agregarDesdeBusqueda(nombreRestaurante, nombreProd, precio) {
 }
 
 function obtenerSubcategoria(prod) {
-    // 🟢 ESTO ES LO QUE FALTABA: Leer la subcategoría manual primero
     if (prod.subcat) return prod.subcat;
 
     const nombre = normalizarTexto(prod.nombre);
@@ -609,13 +608,10 @@ function renderizarMenuConSubcategorias(nombreRestaurante) {
     }
 
     const productos = menus[nombreRestaurante] || [];
-
-    // Verificar si el negocio actual pertenece a la categoría "restaurantes"
     const esRestaurante = negociosPorCategoria["restaurantes"] && 
                           negociosPorCategoria["restaurantes"].some(t => t.nombre === nombreRestaurante);
 
     if (esRestaurante) {
-        // Solo mostrar pestañas si es un restaurante
         tabsContainer.style.display = "block";
         tabsContainer.innerHTML = `
             <div class="subcategorias-tabs">
@@ -625,12 +621,10 @@ function renderizarMenuConSubcategorias(nombreRestaurante) {
             </div>
         `;
     } else {
-        // En farmacias, motos, hogar, etc., ocultamos las pestañas
         tabsContainer.style.display = "none";
         tabsContainer.innerHTML = "";
     }
 
-    // Si es restaurante, filtramos por pestaña; si es otro negocio, mostramos todos los productos directamente
     const productosFiltrados = esRestaurante 
         ? productos.filter(prod => obtenerSubcategoria(prod) === subcategoriaActiva)
         : productos;
@@ -751,6 +745,27 @@ function cerrarModalCarrito() {
     cambiarVista(vistaActual, false);
 }
 
+function actualizarCostoEnvioRestaurante() {
+    const selectZona = document.getElementById('cliente-zona');
+    if (!selectZona) return;
+    
+    const opcionSeleccionada = selectZona.options[selectZona.selectedIndex];
+    const precioEnvio = parseFloat(opcionSeleccionada.getAttribute('data-precio')) || 0;
+    const boxEnvio = document.getElementById('info-envio-box');
+
+    const restNombre = carrito.length > 0 ? carrito[0].restaurante : "";
+    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
+
+    if (boxEnvio) {
+        if (esGratis) {
+            boxEnvio.innerHTML = `<strong>Tarifa Oficial (${selectZona.value}):</strong> Q${precioEnvio}.00 (Aplica envío gratis si cumples el mínimo de consumo del comercio).`;
+        } else {
+            boxEnvio.innerHTML = `<strong>Tarifa Oficial de Envío para ${selectZona.value}:</strong> Q${precioEnvio}.00`;
+        }
+        boxEnvio.style.display = 'block';
+    }
+}
+
 function verDetalleCarrito() {
     const contenedorLista = document.getElementById('carrito-lista');
     const seccionDatos = document.getElementById('seccion-datos');
@@ -784,27 +799,23 @@ function verDetalleCarrito() {
 
     contenedorLista.innerHTML = html;
     seccionDatos.style.display = 'block';
-
-    const restNombre = carrito[0].restaurante;
-    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
-
-    if (esGratis) {
-        boxEnvio.innerHTML = `<strong>Cobertura:</strong> Envíos a casco urbano y aldeas. El mínimo de consumo varía según distancia.`;
-        boxEnvio.style.display = 'block';
-    } else {
-        boxEnvio.innerHTML = `Su pedido aplica tarifa de envío adicional, (se coordina por WhatsApp según dirección)`;
-        boxEnvio.style.display = 'block';
-    }
+    actualizarCostoEnvioRestaurante();
 }
 
 async function enviarAWhatsApp() {
     const nombreInput = document.getElementById('cliente-nombre');
     const direccionInput = document.getElementById('cliente-direccion');
     const referenciaInput = document.getElementById('cliente-referencia');
+    const selectZona = document.getElementById('cliente-zona');
 
     const nombre = nombreInput.value.trim();
     const direccion = direccionInput.value.trim();
     const referencia = referenciaInput.value.trim();
+    const zonaSeleccionada = selectZona ? selectZona.value : "";
+    
+    const opcionSeleccionada = selectZona ? selectZona.options[selectZona.selectedIndex] : null;
+    const precioEnvioBase = opcionSeleccionada ? parseFloat(opcionSeleccionada.getAttribute('data-precio')) || 0 : 6.00;
+
     const formaPagoSelect = document.getElementById('forma-pago');
     const formaPago = formaPagoSelect ? formaPagoSelect.value : "Efectivo contra entrega";
 
@@ -824,8 +835,16 @@ async function enviarAWhatsApp() {
         direccionInput.classList.remove('campo-error');
     }
 
+    if (!zonaSeleccionada) {
+        selectZona.classList.add('campo-error');
+        alert("Por favor selecciona tu zona de cobertura de la lista oficial.");
+        return;
+    } else {
+        selectZona.classList.remove('campo-error');
+    }
+
     if (hayError) {
-        alert("Por favor completa los campos obligatorios (Nombre y Dirección).");
+        alert("Por favor completa los campos obligatorios (Nombre, Dirección y Zona).");
         return;
     }
 
@@ -834,37 +853,29 @@ async function enviarAWhatsApp() {
     let descuento = typeof descuentoAplicado !== 'undefined' ? descuentoAplicado : 0;
     let totalFinal = subtotal - descuento;
 
-    // Validar si el restaurante tiene envío gratis por defecto
-    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
-
-    // Determinar si se debe cobrar el producto en destino según la forma de pago
-    // Si paga con tarjeta o transferencia, ya está pagado ('no'). Si es efectivo, se cobra ('si').
     const esEfectivo = formaPago.toLowerCase().includes('efectivo');
     const cobrarProducto = esEfectivo ? 'si' : 'no';
-
-    // Construir el detalle del contenido del carrito para el panel
     let detalleContenido = carrito.map(item => `${item.cantidad}x ${item.nombre}`).join(', ');
 
-    // Estructura exacta que espera 'index.html' (Dash Conductor / Gestor)
+    // Estructura para sincronizar con el panel del gestor/conductor
     const nuevaOrdenFirebase = {
         id: Math.floor(1000 + Math.random() * 9000).toString(),
         date: new Date().toISOString().slice(0, 10),
         timestamp: Date.now(),
         client: nombre,
-        address: direccion,
+        address: `${direccion} (${zonaSeleccionada})`,
         restaurant: restNombre,
         description: detalleContenido,
         notes: referencia ? `Ref: ${referencia} | Pago: ${formaPago}` : `Pago: ${formaPago}`,
         productPrice: totalFinal,
         productCollect: cobrarProducto,
-        shippingPrice: esGratis ? 0.00 : 20.00, // Tarifa base que el gestor podrá ajustar si es necesario
-        payer: esGratis ? 'restaurante' : 'cliente',
-        driver: 'Carlos Villalobos', // Conductor predeterminado inicial que el gestor puede reasignar
+        shippingPrice: precioEnvioBase, // Tarifa oficial extraída de tu tabla
+        payer: 'cliente',
+        driver: 'TODOS', 
         status: 'Pendiente'
     };
 
     try {
-        // Guardar directamente en la ruta 'orders' que escucha index.html
         const ordersRef = ref(db, 'orders');
         await push(ordersRef, nuevaOrdenFirebase);
         console.log("Orden sincronizada correctamente con Dash Conductor");
@@ -872,11 +883,11 @@ async function enviarAWhatsApp() {
         console.error("Error al sincronizar con Firebase:", error);
     }
 
-    // Construcción del mensaje de WhatsApp para el negocio
+    // Construcción del mensaje de WhatsApp
     let mensaje = `*¡Nuevo Pedido en Dash Delivery 502!* (#${nuevaOrdenFirebase.id})\n\n`;
     mensaje += `🏪 *Negocio:* ${restNombre}\n`;
     mensaje += `👤 *Cliente:* ${nombre}\n`;
-    mensaje += `📍 *Dirección:* ${direccion}\n`;
+    mensaje += `📍 *Dirección:* ${direccion} (${zonaSeleccionada})\n`;
     if (referencia) {    
         mensaje += `🏠 *Referencia:* ${referencia}\n`;
     }
@@ -891,13 +902,12 @@ async function enviarAWhatsApp() {
     
     if (descuento > 0) {
         mensaje += `🏷️ *Descuento (Cupón):* -Q${descuento}.00\n`;
-        mensaje += `💵 *Total Final con Descuento:* Q${totalFinal}.00\n`;
+        mensaje += `💵 *Total Final Productos:* Q${totalFinal}.00\n`;
     }
 
-    mensaje += esGratis ? `🚚 *Envío:* GRATIS\n` : `🚚 *Envío:* Pendiente de calcular según ubicación\n`;
+    mensaje += `🚚 *Envío Oficial (${zonaSeleccionada}):* Q${precioEnvioBase}.00\n`;
     mensaje += `\n¡Quedo a la espera de la confirmación!`;
     
-    // Limpiar carrito local
     carrito = [];
     localStorage.removeItem('dash_carrito_502');
     actualizarTotal();
@@ -919,6 +929,7 @@ window.abrirModalCarrito = abrirModalCarrito;
 window.cerrarModalCarrito = cerrarModalCarrito;
 window.enviarAWhatsApp = enviarAWhatsApp;
 window.cambiarSubcategoria = cambiarSubcategoria;
+window.actualizarCostoEnvioRestaurante = actualizarCostoEnvioRestaurante;
 
 window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
@@ -1010,6 +1021,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnCupon.addEventListener("click", manejarAplicarCupon);
     }
 });
+
 // Abrir vista de Mandados
 function abrirSeccionMandados() {
     const panelPrincipal = document.getElementById('seccion-panel-principal');
@@ -1041,12 +1053,47 @@ function evaluarTipoEntrega() {
     }
 }
 
+// Tabla de tarifas base para restaurantes para calcular automáticamente el mandado (+Q4)
+const tarifasBaseMandados = {
+    "Casco Urbano de Nueva Santa Rosa": 6,
+    "Palin Nueva Santa Rosa": 6,
+    "Aldea el Riachuelo": 6,
+    "Casco Urbano de Santa Rosa de Lima": 7,
+    "Aldea el Chupadero": 8,
+    "Aldea Joya de San Isidro": 8,
+    "Aldea Espitia Real": 8,
+    "Aldea Espitia Barrera": 8,
+    "Cruz de la Mision SRL": 8,
+    "El Valle NSR": 8,
+    "Casco urbano de Casillas": 12,
+    "Laguna de Pereira": 12,
+    "Amberes": 14,
+    "Aldea Estanzuelas": 15,
+    "Aldea Chapas": 15,
+    "Aldea el Anonillo": 15,
+    "Aldea Guadalupe": 15,
+    "Aldea Ojo de Agua": 15,
+    "San Jose Rinconcito": 15,
+    "Jumaytepeque": 15,
+    "Cacalotepeque": 18,
+    "Aldea la Casita": 18,
+    "Aldea el Jute": 18,
+    "El Rodeo SRL": 18,
+    "San Miguel Rincon": 18,
+    "Aldea el Salitre": 22,
+    "Santa Ana La Montaña": 22,
+    "San Juan Tapalapa": 25,
+    "El Carrizal": 25
+};
+
 // Enviar solicitud de mandado por WhatsApp y guardar en Firebase
 async function enviarMandadoAWhatsApp(e) {
     e.preventDefault();
 
     const nombre = document.getElementById('mandado-nombre').value.trim();
     const telefono = document.getElementById('mandado-telefono').value.trim();
+    const zonaSelect = document.getElementById('mandado-zona');
+    const zonaElegida = zonaSelect.value;
     const tipoEntrega = document.getElementById('mandado-tipo-entrega').value;
     const horaProgramada = document.getElementById('mandado-hora-programada').value;
     const origen = document.getElementById('mandado-origen').value.trim();
@@ -1059,6 +1106,10 @@ async function enviarMandadoAWhatsApp(e) {
         return;
     }
 
+    // Calcular tarifa de mandado (Tarifa base de la zona + Q4.00 adicionales)
+    const tarifaBase = tarifasBaseMandados[zonaElegida] || 6;
+    const tarifaMandadoFinal = tarifaBase + 4;
+
     let modalidadEntregaTxt = tipoEntrega;
     if (tipoEntrega === 'Programado' && horaProgramada) {
         modalidadEntregaTxt = `📅 Programado (Hora: ${horaProgramada})`;
@@ -1066,16 +1117,17 @@ async function enviarMandadoAWhatsApp(e) {
         modalidadEntregaTxt = `⚡ Inmediato (Lo antes posible)`;
     }
 
-    // Código de seguimiento de mandado
     const codigoMandado = "MND-" + Math.floor(1000 + Math.random() * 9000);
 
-    // Guardar en Firebase Realtime Database
+    // Guardar en Firebase Realtime Database para que aparezca en el panel del Gestor
     try {
         const mandadosRef = ref(db, 'encargos_mandados');
         await push(mandadosRef, {
             codigo: codigoMandado,
             clienteNombre: nombre,
             clienteTelefono: telefono,
+            zona: zonaElegida,
+            shippingPrice: tarifaMandadoFinal,
             modalidad: modalidadEntregaTxt,
             origen: origen,
             destino: destino,
@@ -1091,23 +1143,23 @@ async function enviarMandadoAWhatsApp(e) {
     let mensaje = `*🛵 SOLICITUD DE ENCARGO Y MANDADO (${codigoMandado})*\n\n`;
     mensaje += `👤 *Cliente:* ${nombre}\n`;
     mensaje += `📞 *Teléfono:* ${telefono}\n`;
+    mensaje += `📍 *Zona / Destino:* ${zonaElegida}\n`;
+    mensaje += `💵 *Tarifa Estimada (Base + Q4):* Q${tarifaMandadoFinal}.00\n`;
     mensaje += `⏰ *Modalidad:* ${modalidadEntregaTxt}\n\n`;
     mensaje += `📍 *Punto de Recolección (Origen):*\n${origen}\n\n`;
     mensaje += `🏠 *Punto de Entrega (Destino):*\n${destino}\n\n`;
     mensaje += `📦 *Detalle del Encargo:*\n${detalle}\n\n`;
-    mensaje += `✅ *Aceptó normas (<=4lbs, dimensiones y no prohibidos):* Sí\n\n`;
-    mensaje += `Quedo a la espera de la cotización de la tarifa de envío.`;
+    mensaje += `✅ *Aceptó normas:* Sí\n\n`;
+    mensaje += `¡Quedo a la espera de la confirmación!`;
 
     const urlWhatsApp = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
     
-    // Limpiar formulario
     document.getElementById('form-mandados').reset();
     document.getElementById('box-hora-programada').style.display = 'none';
 
     window.open(urlWhatsApp, '_blank');
 }
 
-// Al final de tu main.js, registra las funciones públicas:
 window.abrirSeccionMandados = abrirSeccionMandados;
 window.evaluarTipoEntrega = evaluarTipoEntrega;
 window.enviarMandadoAWhatsApp = enviarMandadoAWhatsApp;

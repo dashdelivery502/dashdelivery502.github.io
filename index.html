@@ -119,71 +119,105 @@
             <div id="lista-productos"></div>
         </div>
     </div>
-    <!-- SECCIÓN ENCARGOS Y MANDADOS -->
-<div id="seccion-mandados" class="menu-seccion" style="display: none;">
-    <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver al Inicio</button>
     
-    <!-- Barra Destacada de Tarifas e Información -->
-    <div class="banner-mandados-promo">
-        🚀 <span>Encargos y mandados rápidos desde <strong>Q8.00</strong></span>
-    </div>
-
-    <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;">🛵 Encargos y Mandados</h2>
-    <p style="text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 15px;">Servicio express local de 9:00 AM a 6:00 PM</p>
-
-    <!-- Reglas y Condiciones del Servicio -->
-    <div class="reglas-mandados-box">
-        <h4>📋 Condiciones del Servicio</h4>
-        <ul>
-            <li>⏰ <strong>Horario de atención:</strong> 9:00 AM a 6:00 PM (Inmediato o programado).</li>
-            <li>📦 <strong>Dimensiones máximas:</strong> 30cm x 30cm x 40cm.</li>
-            <li>⚖️ <strong>Peso máximo:</strong> Hasta 4 lbs por envío.</li>
-            <li>🚫 <strong>Prohibidos:</strong> No se transportan armas, sustancias ilícitas ni químicos peligrosos.</li>
-            <li>💵 <strong>Compras:</strong> No realizamos compras a nombre de la empresa ni financiamiento.</li>
-            <li>📍 <strong>Seguridad:</strong> No se realizan entregas en zonas de alto riesgo o despobladas.</li>
-        </ul>
-    </div>
-
-    <!-- Formulario de Solicitud -->
-    <form id="form-mandados" onsubmit="enviarMandadoAWhatsApp(event)" class="datos-cliente" style="margin-top: 20px;">
-        <h4>Llena los datos de tu encargo:</h4>
-
-        <label class="label-form">Tu Nombre Completo *</label>
-        <input type="text" id="mandado-nombre" placeholder="Ej. Juan Pérez" required>
-
-        <label class="label-form">Teléfono de Contacto *</label>
-        <input type="tel" id="mandado-telefono" placeholder="Ej. 55554444" required>
-
-        <label class="label-form">Tipo de Entrega *</label>
-        <select id="mandado-tipo-entrega" class="input-select-mandado" onchange="evaluarTipoEntrega()" required>
-            <option value="Inmediato (Hoy)">⚡ Lo antes posible (Inmediato)</option>
-            <option value="Programado">📅 Programar para más tarde (9am - 6pm)</option>
-        </select>
-
-        <div id="box-hora-programada" style="display: none; margin-bottom: 12px;">
-            <label class="label-form">Hora programada (Entre 9:00 AM y 6:00 PM) *</label>
-            <input type="time" id="mandado-hora-programada" min="09:00" max="18:00">
+    <!-- SECCIÓN ENCARGOS Y MANDADOS -->
+    <div id="seccion-mandados" class="menu-seccion" style="display: none;">
+        <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver al Inicio</button>
+        
+        <div class="banner-mandados-promo">
+            🚀 <span>Encargos y mandados rápidos con tarifa oficial + <strong>Q4.00 adicionales</strong> por gestión</span>
         </div>
 
-        <label class="label-form">Punto de Recolección (Origen) *</label>
-        <input type="text" id="mandado-origen" placeholder="Ej. Traer llaves de Casa de mi mamá (Dirección exacta)" required>
+        <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;">🛵 Encargos y Mandados</h2>
+        <p style="text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 15px;">Servicio express local de 9:00 AM a 6:00 PM</p>
 
-        <label class="label-form">Punto de Entrega (Destino) *</label>
-        <input type="text" id="mandado-destino" placeholder="Ej. Entregar en mi negocio en el Barrio El Centro" required>
-
-        <label class="label-form">Detalle del Encargo / Paquete *</label>
-        <textarea id="mandado-detalle" class="input-textarea-mandado" placeholder="Ej. Una carpeta con documentos pequeños y un cargador." required></textarea>
-
-        <div class="checkbox-reglas-container">
-            <input type="checkbox" id="check-reglas" required>
-            <label for="check-reglas">Confirmo que mi paquete cumple con el peso (< 4 lbs), dimensiones y acepto los términos del servicio.</label>
+        <!-- Reglas y Condiciones del Servicio -->
+        <div class="reglas-mandados-box">
+            <h4>📋 Condiciones del Servicio</h4>
+            <ul>
+                <li>⏰ <strong>Horario de atención:</strong> 9:00 AM a 6:00 PM (Inmediato o programado).</li>
+                <li>📦 <strong>Dimensiones máximas:</strong> 30cm x 30cm x 40cm.</li>
+                <li>⚖️ <strong>Peso máximo:</strong> Hasta 4 lbs por envío.</li>
+                <li>🚫 <strong>Prohibidos:</strong> No se transportan armas, sustancias ilícitas ni químicos peligrosos.</li>
+                <li>💵 <strong>Compras:</strong> No realizamos compras a nombre de la empresa ni financiamiento.</li>
+                <li>📍 <strong>Seguridad:</strong> No se realizan entregas en zonas de alto riesgo o despobladas.</li>
+            </ul>
         </div>
 
-        <button type="submit" class="btn-pedir-whatsapp" style="margin-top: 15px;">
-            📲 Solicitar Cotización de Encargo
-        </button>
-    </form>
-</div>
+        <!-- Formulario de Solicitud de Mandados -->
+        <form id="form-mandados" onsubmit="enviarMandadoAWhatsApp(event)" class="datos-cliente" style="margin-top: 20px;">
+            <h4>Llena los datos de tu encargo:</h4>
+
+            <label class="label-form">Tu Nombre Completo *</label>
+            <input type="text" id="mandado-nombre" placeholder="Ej. Juan Pérez" required>
+
+            <label class="label-form">Teléfono de Contacto *</label>
+            <input type="tel" id="mandado-telefono" placeholder="Ej. 55554444" required>
+
+            <label class="label-form">Selecciona tu Zona / Destino (Tarifa oficial + Q4) *</label>
+            <select id="mandado-zona" class="input-select-mandado" required>
+                <option value="" disabled selected>-- Elige tu zona de cobertura --</option>
+                <option value="Casco Urbano de Nueva Santa Rosa">Casco Urbano de Nueva Santa Rosa (Q10.00)</option>
+                <option value="Palin Nueva Santa Rosa">Palin Nueva Santa Rosa (Q10.00)</option>
+                <option value="Aldea el Riachuelo">Aldea el Riachuelo (Q10.00)</option>
+                <option value="Casco Urbano de Santa Rosa de Lima">Casco Urbano de Santa Rosa de Lima (Q11.00)</option>
+                <option value="Aldea el Chupadero">Aldea el Chupadero (Q12.00)</option>
+                <option value="Aldea Joya de San Isidro">Aldea Joya de San Isidro (Q12.00)</option>
+                <option value="Aldea Espitia Real">Aldea Espitia Real (Q12.00)</option>
+                <option value="Aldea Espitia Barrera">Aldea Espitia Barrera (Q12.00)</option>
+                <option value="Cruz de la Mision SRL">Cruz de la Mision SRL (Q12.00)</option>
+                <option value="El Valle NSR">El Valle NSR (Q12.00)</option>
+                <option value="Casco urbano de Casillas">Casco urbano de Casillas (Q16.00)</option>
+                <option value="Laguna de Pereira">Laguna de Pereira (Q16.00)</option>
+                <option value="Amberes">Amberes (Q18.00)</option>
+                <option value="Aldea Estanzuelas">Aldea Estanzuelas (Q19.00)</option>
+                <option value="Aldea Chapas">Aldea Chapas (Q19.00)</option>
+                <option value="Aldea el Anonillo">Aldea el Anonillo (Q19.00)</option>
+                <option value="Aldea Guadalupe">Aldea Guadalupe (Q19.00)</option>
+                <option value="Aldea Ojo de Agua">Aldea Ojo de Agua (Q19.00)</option>
+                <option value="San Jose Rinconcito">San Jose Rinconcito (Q19.00)</option>
+                <option value="Jumaytepeque">Jumaytepeque (Q19.00)</option>
+                <option value="Cacalotepeque">Cacalotepeque (Q22.00)</option>
+                <option value="Aldea la Casita">Aldea la Casita (Q22.00)</option>
+                <option value="Aldea el Jute">Aldea el Jute (Q22.00)</option>
+                <option value="El Rodeo SRL">El Rodeo SRL (Q22.00)</option>
+                <option value="San Miguel Rincon">San Miguel Rincon (Q22.00)</option>
+                <option value="Aldea el Salitre">Aldea el Salitre (Q26.00)</option>
+                <option value="Santa Ana La Montaña">Santa Ana La Montaña (Q26.00)</option>
+                <option value="San Juan Tapalapa">San Juan Tapalapa (Q29.00)</option>
+                <option value="El Carrizal">El Carrizal (Q29.00)</option>
+            </select>
+
+            <label class="label-form">Tipo de Entrega *</label>
+            <select id="mandado-tipo-entrega" class="input-select-mandado" onchange="evaluarTipoEntrega()" required>
+                <option value="Inmediato (Hoy)">⚡ Lo antes posible (Inmediato)</option>
+                <option value="Programado">📅 Programar para más tarde (9am - 6pm)</option>
+            </select>
+
+            <div id="box-hora-programada" style="display: none; margin-bottom: 12px;">
+                <label class="label-form">Hora programada (Entre 9:00 AM y 6:00 PM) *</label>
+                <input type="time" id="mandado-hora-programada" min="09:00" max="18:00">
+            </div>
+
+            <label class="label-form">Punto de Recolección (Origen) *</label>
+            <input type="text" id="mandado-origen" placeholder="Ej. Traer llaves de Casa de mi mamá (Dirección exacta)" required>
+
+            <label class="label-form">Punto de Entrega (Destino) *</label>
+            <input type="text" id="mandado-destino" placeholder="Ej. Entregar en mi negocio en el Barrio El Centro" required>
+
+            <label class="label-form">Detalle del Encargo / Paquete *</label>
+            <textarea id="mandado-detalle" class="input-textarea-mandado" placeholder="Ej. Una carpeta con documentos pequeños y un cargador." required></textarea>
+
+            <div class="checkbox-reglas-container">
+                <input type="checkbox" id="check-reglas" required>
+                <label for="check-reglas">Confirmo que mi paquete cumple con el peso (< 4 lbs), dimensiones y acepto los términos del servicio.</label>
+            </div>
+
+            <button type="submit" class="btn-pedir-whatsapp" style="margin-top: 15px;">
+                📲 Solicitar Encargo
+            </button>
+        </form>
+    </div>
 
     <!-- Barra Inferior del Carrito -->
     <div class="carrito-bar">
@@ -212,7 +246,45 @@
             <div id="seccion-datos" class="datos-cliente" style="display:none;">
                 <h4>Datos de Entrega:</h4>
                 <input type="text" id="cliente-nombre" placeholder="Tu Nombre (Obligatorio)">
-                <input type="text" id="cliente-direccion" placeholder="Dirección de Entrega (Obligatorio)">
+                <input type="text" id="cliente-direccion" placeholder="Dirección Exacta (Obligatorio)">
+                
+                <!-- Selector de Zona / Cobertura Oficial -->
+                <div class="form-group" style="margin: 10px 0;">
+                    <label style="font-size: 0.85rem; font-weight: bold; color: #0F4C3A; margin-bottom: 4px; display: block;">Selecciona tu Zona de Cobertura *</label>
+                    <select id="cliente-zona" onchange="actualizarCostoEnvioRestaurante()" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #e0dad0; font-size: 0.9rem; outline: none; background-color: #FAF8F5;" required>
+                        <option value="" disabled selected>-- Elige tu zona --</option>
+                        <option value="Casco Urbano de Nueva Santa Rosa" data-precio="6">Casco Urbano de Nueva Santa Rosa (Q6.00)</option>
+                        <option value="Palin Nueva Santa Rosa" data-precio="6">Palin Nueva Santa Rosa (Q6.00)</option>
+                        <option value="Aldea el Riachuelo" data-precio="6">Aldea el Riachuelo (Q6.00)</option>
+                        <option value="Casco Urbano de Santa Rosa de Lima" data-precio="7">Casco Urbano de Santa Rosa de Lima (Q7.00)</option>
+                        <option value="Aldea el Chupadero" data-precio="8">Aldea el Chupadero (Q8.00)</option>
+                        <option value="Aldea Joya de San Isidro" data-precio="8">Aldea Joya de San Isidro (Q8.00)</option>
+                        <option value="Aldea Espitia Real" data-precio="8">Aldea Espitia Real (Q8.00)</option>
+                        <option value="Aldea Espitia Barrera" data-precio="8">Aldea Espitia Barrera (Q8.00)</option>
+                        <option value="Cruz de la Mision SRL" data-precio="8">Cruz de la Mision SRL (Q8.00)</option>
+                        <option value="El Valle NSR" data-precio="8">El Valle NSR (Q8.00)</option>
+                        <option value="Casco urbano de Casillas" data-precio="12">Casco urbano de Casillas (Q12.00)</option>
+                        <option value="Laguna de Pereira" data-precio="12">Laguna de Pereira (Q12.00)</option>
+                        <option value="Amberes" data-precio="14">Amberes (Q14.00)</option>
+                        <option value="Aldea Estanzuelas" data-precio="15">Aldea Estanzuelas (Q15.00)</option>
+                        <option value="Aldea Chapas" data-precio="15">Aldea Chapas (Q15.00)</option>
+                        <option value="Aldea el Anonillo" data-precio="15">Aldea el Anonillo (Q15.00)</option>
+                        <option value="Aldea Guadalupe" data-precio="15">Aldea Guadalupe (Q15.00)</option>
+                        <option value="Aldea Ojo de Agua" data-precio="15">Aldea Ojo de Agua (Q15.00)</option>
+                        <option value="San Jose Rinconcito" data-precio="15">San Jose Rinconcito (Q15.00)</option>
+                        <option value="Jumaytepeque" data-precio="15">Jumaytepeque (Q15.00)</option>
+                        <option value="Cacalotepeque" data-precio="18">Cacalotepeque (Q18.00)</option>
+                        <option value="Aldea la Casita" data-precio="18">Aldea la Casita (Q18.00)</option>
+                        <option value="Aldea el Jute" data-precio="18">Aldea el Jute (Q18.00)</option>
+                        <option value="El Rodeo SRL" data-precio="18">El Rodeo SRL (Q18.00)</option>
+                        <option value="San Miguel Rincon" data-precio="18">San Miguel Rincon (Q18.00)</option>
+                        <option value="Aldea el Salitre" data-precio="22">Aldea el Salitre (Q22.00)</option>
+                        <option value="Santa Ana La Montaña" data-precio="22">Santa Ana La Montaña (Q22.00)</option>
+                        <option value="San Juan Tapalapa" data-precio="25">San Juan Tapalapa (Q25.00)</option>
+                        <option value="El Carrizal" data-precio="25">El Carrizal (Q25.00)</option>
+                    </select>
+                </div>
+
                 <input type="text" id="cliente-referencia" placeholder="Referencia (ej. Portón rojo)">
                
                 <!-- Resumen de Totales y Cupón -->
@@ -223,15 +295,17 @@
                     <input type="text" id="input-cupon" placeholder="Ej. PROMO1" style="padding: 8px; width: 60%;">
                     <button type="button" id="btn-aplicar-cupon" style="padding: 8px;" onclick="manejarAplicarCupon()">Aplicar</button>
                 </div>
+
                 <!-- Selector Simplificado de Forma de Pago -->
-<div class="form-group" style="margin: 12px 0;">
-    <label style="font-size: 0.85rem; font-weight: bold; color: #0F4C3A; margin-bottom: 4px; display: block;">Forma de Pago:</label>
-    <select id="forma-pago" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #e0dad0; font-size: 0.9rem; outline: none; background-color: #FAF8F5;">
-        <option value="Efectivo contra entrega">Pago contra entrega (Efectivo)</option>
-        <option value="Transferencia bancaria">Pago por Transferencia</option>
-        <option value="Tarjeta de crédito/débito">Pago con Tarjeta</option>
-    </select>
-</div>
+                <div class="form-group" style="margin: 12px 0;">
+                    <label style="font-size: 0.85rem; font-weight: bold; color: #0F4C3A; margin-bottom: 4px; display: block;">Forma de Pago:</label>
+                    <select id="forma-pago" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #e0dad0; font-size: 0.9rem; outline: none; background-color: #FAF8F5;">
+                        <option value="Efectivo contra entrega">Pago contra entrega (Efectivo)</option>
+                        <option value="Transferencia bancaria">Pago por Transferencia</option>
+                        <option value="Tarjeta de crédito/débito">Pago con Tarjeta</option>
+                    </select>
+                </div>
+
                 <button id="btn-whatsapp" class="btn-pedir-whatsapp" onclick="enviarAWhatsApp()">
                      Confirmar Pedido por WhatsApp
                 </button>
