@@ -56,7 +56,7 @@ const negociosPorCategoria = {
         { nombre: "MERCADITO ORIENTE", envioGratis: false, img: "https://www.creativefabrica.com/wp-content/uploads/2024/12/09/Modern-Ecommerce-Website-Logo-SVG-Vector-Graphics-111628754-1-580x387.jpg" }
     ],
     "vehiculos": [
-        { nombre: "MOTOS HONDA", envioGratis: true, img: "img/honda.webp" }
+        { nombre: "MOTOS HONDA", envioGratis: true, img: "img/honda1.webp" }
     ],
     "hogar": [
         { nombre: "TOTALPLAST", envioGratis: true, img: "img/plast.webp" },
@@ -277,7 +277,7 @@ const menus = {
         { nombre: "Vaso Diamante", precio: 10, descripcion: "hermoso y resistente, capacidad de hasta 650ml.", imagen: "img/vasop.webp" }
     ],
     "MOTOS HONDA": [
-        { nombre: "XBLADE 160 mod2026", precio: 17890, descripcion: "mecanica,gasolina/carburada, diseño deportivo y baja altura", etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://th.bing.net/th/id/R.ce16a0823a94576db70b92c330f4397a?rik=6rlDgteiVsdpHg&pid=ImgRaw&r=0" },
+        { nombre: "XBLADE 160 2026", precio: 17890, descripcion: "mecanica,gasolina/carburada, diseño deportivo y baja altura", etiqueta: "Hasta 24 cuotas sin interes", imagen: "img/xblade.webp" },
         { nombre: "XR190L 2026", precio: 28490, descripcion: "doble proposito versatil, tablero digital y puerto usb",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://motos.honda.com.ec/uploads/galeria/XR190L_R.jpg" },
         { nombre: "XR150L 2026", precio: 16290, descripcion: "doble proposito versatil y resistente para uso diario",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://tse2.mm.bing.net/th/id/OIP.3jWa1kxtLKUUg0DXYeHO5QHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
         { nombre: "CRF300 RALLY 2026", precio: 68190, descripcion: "Trail ligera y de aventura 27.5 CV y 26.6 Nm",etiqueta: "Hasta 24 cuotas sin interes", imagen: "https://tse1.mm.bing.net/th/id/OIP.1e4M1aCoGjk0G-9vvNWuQgAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" },
