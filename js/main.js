@@ -43,7 +43,7 @@ const negociosPorCategoria = {
         { nombre: "POLLO GRANJERO", envioGratis: false, img: "img/granjero.webp" },
         { nombre: "DOMINOS EXPRESS", envioGratis: false, img:  "img/dominos.webp" },
         { nombre: "CHICHARRONERIA KATY", envioGratis: false, img: "img/katy.webp" },
-        { nombre: "LA NEVERIA", envioGratis: false, img: "img/neveria.webp" },
+        { nombre: "LA NEVERIA", envioGratis: true, img: "img/neveria.webp" },
         { nombre: "HOLANDESA", envioGratis: false, img: "img/holandesa.webp" }
     ],
     "farmacia": [
@@ -75,9 +75,9 @@ const infoRestaurantes = {
     "POLLO GRANJERO": { envioGratis: false, mensajeInfo: "Horario delivery 9am-6pm" },
     "DOMINOS EXPRESS": { envioGratis: false, mensajeInfo: "Horario delivery 8am-8pm"},
     "CHICHARRONERIA KATY": { envioGratis: false },
-    "LA NEVERIA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-5pm"},
+    "LA NEVERIA": { envioGratis: true, mensajeInfo: "Horario delivery 9am-5pm / Envio gratis aplica desde los Q60 en casco urbano"},
     "HOLANDESA": { envioGratis: false, mensajeInfo: "Horario delivery 9am-7pm" },
-    "FARMACIA MI SALUD": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q70" },
+    "FARMACIA MI SALUD": { envioGratis: true, mensajeInfo: "Horario delivery 8am-8pm / envio gratis aplica desde Q60 en casco urbano" },
     "BELLO OASIS": { envioGratis: false, mensajeInfo: "Horario delivery 8am-8pm"},
     "VERDURAS Y FRUTAS JENNYFER": { envioGratis: false, mensajeInfo: "Horario delivery 8am-5pm"},
     "CARNICERIA EL RANCHO": { envioGratis: false, mensajeInfo: "Horario delivery 8am-4pm"},
@@ -178,8 +178,8 @@ const menus = {
         { nombre: "chicharron 1 libra", precio: 67, descripcion: "Delicioso chicharrón con jalapeño y cebolla", imagen: "img/chicharron1.webp",subcat:"menus" },
         { nombre: "Costilla con cuero 1LB", precio: 67, descripcion: "1lb de crujiente costilla, incluye jalapeño y cebolla", imagen: "img/costilla1.webp" ,subcat:"menus"},
         { nombre: "1 litro de Pepsi", precio: 8,etiqueta: "disponible muy pronto", descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp",subcat:"bebidas" },
-        { nombre: "Rabano picado", precio: 12, descripcion: "picado para complementar nuestro menu", imagen: "img/rabano.webp",subcat:"complemento" },
-        { nombre: "Chile escabeche", precio: 12, descripcion: "nuestra deliciosa receta de chile", imagen: "img/escabeche.webp",subcat:"complemento" },
+        { nombre: "Rabano picado", precio: 12, descripcion: "picado para complementar nuestro menu", imagen: "img/rabano.webp",subcat:"complementos" },
+        { nombre: "Chile escabeche", precio: 12, descripcion: "nuestra deliciosa receta de chile", imagen: "img/escabeche.webp",subcat:"complementos" },
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
         { nombre: "Bebida natural 550ml", precio: 12, descripcion: "refresco natural de 500ml", imagen: "img/rnatural.webp", opciones: ["cremita", "tamarindo", "jamaica"],subcat:"bebidas" },
         { nombre: "Bebida natural 1LT", precio: 12, descripcion: "refresco natural de 1Lt", imagen: "img/rnatural.webp", opciones: ["cremita", "tamarindo", "jamaica"],subcat:"bebidas" }
@@ -1112,7 +1112,7 @@ async function enviarMandadoAWhatsApp(e) {
     const aceptoReglas = document.getElementById('check-reglas').checked;
 
     if (!aceptoReglas) {
-        alert("Debes aceptar los términos y condiciones del servicio de encargos.");
+        alert("Debes aceptar los términos y condiciones del servicio de Paqueteria.");
         return;
     }
 
@@ -1131,7 +1131,7 @@ async function enviarMandadoAWhatsApp(e) {
 
     // Guardar en Firebase Realtime Database para que aparezca en el panel del Gestor
     try {
-        const mandadosRef = ref(db, 'encargos_mandados');
+        const mandadosRef = ref(db, 'Paqueteria_mandados');
         await push(mandadosRef, {
             codigo: codigoMandado,
             clienteNombre: nombre,
@@ -1150,7 +1150,7 @@ async function enviarMandadoAWhatsApp(e) {
     }
 
     // Estructurar Mensaje de WhatsApp
-    let mensaje = `*🛵 SOLICITUD DE ENCARGO Y MANDADO (${codigoMandado})*\n\n`;
+    let mensaje = `*🛵 SOLICITUD DE PAQUETERIA Y MANDADO (${codigoMandado})*\n\n`;
     mensaje += `👤 *Cliente:* ${nombre}\n`;
     mensaje += `📞 *Teléfono:* ${telefono}\n`;
     mensaje += `📍 *Zona / Destino:* ${zonaElegida}\n`;
@@ -1158,7 +1158,7 @@ async function enviarMandadoAWhatsApp(e) {
     mensaje += `⏰ *Modalidad:* ${modalidadEntregaTxt}\n\n`;
     mensaje += `📍 *Punto de Recolección (Origen):*\n${origen}\n\n`;
     mensaje += `🏠 *Punto de Entrega (Destino):*\n${destino}\n\n`;
-    mensaje += `📦 *Detalle del Encargo:*\n${detalle}\n\n`;
+    mensaje += `📦 *Detalle del Paquete:*\n${detalle}\n\n`;
     mensaje += `✅ *Aceptó normas:* Sí\n\n`;
     mensaje += `¡Quedo a la espera de la confirmación!`;
 

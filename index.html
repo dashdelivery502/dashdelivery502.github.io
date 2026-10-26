@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="card-categoria-principal" onclick="abrirSeccionMandados()">
-                     <img src="img/cate6.webp" alt="Encargos y Mandados" class="img-icono-categoria">
-                     <h3>Encargos y Mandados</h3>
+                     <img src="img/cate6.webp" alt="Paqueteria y Mandados" class="img-icono-categoria">
+                     <h3>Paqueteria y Mandados</h3>
                 </div>
 
                 <div class="card-categoria-principal" onclick="irACategoria('otros')">
@@ -119,15 +119,15 @@
         </div>
     </div>
     
-    <!-- SECCIÓN ENCARGOS Y MANDADOS -->
+    <!-- SECCIÓN PAQUETERIA Y MANDADOS -->
     <div id="seccion-mandados" class="menu-seccion" style="display: none;">
         <button class="btn-volver" onclick="volverAPanelPrincipal()">← Volver </button>
         
         <div class="banner-mandados-promo">
-            <span>Encargos y mandados rápidos + <strong>Tarifa de gestion incluida</strong> manda tus paquetes con nosotros</span>
+            <span> Paqueteria y mandados / <strong>Tarifa extra si sobrepasa dimencion o peso</strong> Gracias por preferirnos</span>
         </div>
 
-        <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;"> Encargos y Mandados</h2>
+        <h2 style="color: #0F4C3A; text-align: center; margin-bottom: 5px;"> Paqueteria y Mandados</h2>
         <p style="text-align: center; font-size: 0.85rem; color: #666; margin-bottom: 15px;">Servicio express local de 9:00 AM a 6:00 PM</p>
 
         <!-- Reglas y Condiciones del Servicio -->
@@ -145,7 +145,7 @@
 
         <!-- Formulario de Solicitud de Mandados -->
         <form id="form-mandados" onsubmit="enviarMandadoAWhatsApp(event)" class="datos-cliente" style="margin-top: 20px;">
-            <h4>Llena los datos de tu encargo:</h4>
+            <h4>Llena los datos del formulario:</h4>
 
             <label class="label-form">Tu Nombre Completo *</label>
             <input type="text" id="mandado-nombre" placeholder="Ej. Juan Pérez" required>
@@ -153,7 +153,7 @@
             <label class="label-form">Teléfono de Contacto *</label>
             <input type="tel" id="mandado-telefono" placeholder="Ej. 55554444" required>
 
-            <label class="label-form">Selecciona tu Zona / Destino (Tarifa oficial + Q4) *</label>
+            <label class="label-form">Selecciona tu Zona / Destino *</label>
             <select id="mandado-zona" class="input-select-mandado" required>
                 <option value="" disabled selected>-- Elige tu zona de cobertura --</option>
                 <option value="Casco Urbano de Nueva Santa Rosa">Casco Urbano de Nueva Santa Rosa (Q10.00)</option>
@@ -189,7 +189,7 @@
 
             <label class="label-form">Tipo de Entrega *</label>
             <select id="mandado-tipo-entrega" class="input-select-mandado" onchange="evaluarTipoEntrega()" required>
-                <option value="Inmediato (Hoy)"> Lo antes posible (Inmediato)</option>
+                <option value="Inmediato (Hoy)"> Lo antes posible </option>
                 <option value="Programado">📅 Programar para más tarde (9am - 6pm)</option>
             </select>
 
@@ -204,7 +204,7 @@
             <label class="label-form">Punto de Entrega (Destino) *</label>
             <input type="text" id="mandado-destino" placeholder="Ej. Entregar en mi negocio en el Barrio El Centro" required>
 
-            <label class="label-form">Detalle del Encargo / Paquete *</label>
+            <label class="label-form">Detalle del Paquete *</label>
             <textarea id="mandado-detalle" class="input-textarea-mandado" placeholder="Ej. Una carpeta con documentos pequeños y un cargador." required></textarea>
 
             <div class="checkbox-reglas-container">
@@ -213,8 +213,7 @@
             </div>
 
             <button type="submit" class="btn-pedir-whatsapp" style="margin-top: 15px;">
-                 Solicitar Encargo
-            </button>
+                 Solicitar Envio  </button>
         </form>
     </div>
 
