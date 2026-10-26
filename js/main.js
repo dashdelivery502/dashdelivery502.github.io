@@ -34,6 +34,21 @@ let subcategoriaActiva = 'menus';
 
 const NUMERO_WHATSAPP = "50253062335";
 
+// Variables globales para mapas Leaflet (Puntos de entrega)
+let mapaUbicacionModal = null;
+let marcadorUbicacionModal = null;
+let coordsUbicacionCliente = null;
+
+let mapaOrigenMandado = null;
+let marcadorOrigenMandado = null;
+let coordsOrigenMandado = null;
+
+let mapaDestinoMandado = null;
+let marcadorDestinoMandado = null;
+let coordsDestinoMandado = null;
+
+const COORDS_NUEVA_SANTA_ROSA = [14.3811, -90.2761];
+
 const negociosPorCategoria = {
     "restaurantes": [
         { nombre: "CEVICHES FISH EXPRESS", envioGratis: true, img: "img/fish.webp" },
@@ -337,6 +352,13 @@ function cargarCarritoGuardado() {
     }
 }
 
+function controlarVisibilidadBarraCarrito(mostrar) {
+    const carritoBar = document.querySelector('.carrito-bar');
+    if (carritoBar) {
+        carritoBar.style.display = mostrar ? 'flex' : 'none';
+    }
+}
+
 function cambiarVista(nuevaVista, push = true) {
     const panelPrincipal = document.getElementById('seccion-panel-principal');
     const seccionRestaurantes = document.getElementById('seccion-restaurantes');
@@ -352,15 +374,19 @@ function cambiarVista(nuevaVista, push = true) {
     if (nuevaVista === 'panel-inicio') {
         panelPrincipal.style.display = 'block';
         modalCarrito.style.display = 'none';
+        controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'restaurantes') {
         seccionRestaurantes.style.display = 'block';
         modalCarrito.style.display = 'none';
+        controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'menu') {
         seccionMenu.style.display = 'block';
         modalCarrito.style.display = 'none';
+        controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'mandados') {
         if (seccionMandados) seccionMandados.style.display = 'block';
         modalCarrito.style.display = 'none';
+        controlarVisibilidadBarraCarrito(false); // Ocultar barra flotante en Mandados
     } else if (nuevaVista === 'carrito') {
         if (vistaActual === 'menu') seccionMenu.style.display = 'block';
         else if (vistaActual === 'mandados' && seccionMandados) seccionMandados.style.display = 'block';
@@ -369,6 +395,7 @@ function cambiarVista(nuevaVista, push = true) {
 
         modalCarrito.style.display = 'flex';
         verDetalleCarrito();
+        setTimeout(inicializarMapaModalCliente, 300);
     }
 
     if (push && vistaActual !== nuevaVista) {
@@ -776,6 +803,117 @@ function actualizarCostoEnvioRestaurante() {
     }
 }
 
+// ==========================================
+// MAPA INTERACTIVO Y GPS PARA EL CLIENTE (LEAFLET)
+// ==========================================
+function inicializarMapaModalCliente() {
+    const container = document.getElementById('mapa-cliente-modal');
+    if (!container || typeof L === 'undefined') return;
+
+    if (!mapaUbicacionModal) {
+        mapaUbicacionModal = L.map('mapa-cliente-modal').setView(COORDS_NUEVA_SANTA_ROSA, 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(mapaUbicacionModal);
+
+        mapaUbicacionModal.on('click', (e) => {
+            fijarUbicacionCliente(e.latlng.lat, e.latlng.lng);
+        });
+    }
+
+    setTimeout(() => {
+        if (mapaUbicacionModal) mapaUbicacionModal.invalidateSize();
+    }, 200);
+}
+
+function fijarUbicacionCliente(lat, lng) {
+    coordsUbicacionCliente = { lat, lng };
+
+    if (!marcadorUbicacionModal) {
+        marcadorUbicacionModal = L.marker([lat, lng], { draggable: true }).addTo(mapaUbicacionModal);
+        marcadorUbicacionModal.on('dragend', (e) => {
+            const pos = e.target.getLatLng();
+            coordsUbicacionCliente = { lat: pos.lat, lng: pos.lng };
+        });
+    } else {
+        marcadorUbicacionModal.setLatLng([lat, lng]);
+    }
+
+    mapaUbicacionModal.setView([lat, lng], 16);
+
+    const txtEstado = document.getElementById('status-mapa-cliente');
+    if (txtEstado) {
+        txtEstado.textContent = `📍 Ubicación de entrega fijada (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+        txtEstado.style.color = "#0F4C3A";
+    }
+}
+
+function capturarGPSCliente() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                fijarUbicacionCliente(pos.coords.latitude, pos.coords.longitude);
+            },
+            (err) => {
+                alert("⚠️ No pudimos obtener tu ubicación automáticamente. Por favor toca tu punto en el mapa.");
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    } else {
+        alert("Tu navegador no soporta GPS automático.");
+    }
+}
+
+function inicializarMapaMandadoOrigen() {
+    const container = document.getElementById('mapa-mandado-origen');
+    if (!container || typeof L === 'undefined') return;
+
+    if (!mapaOrigenMandado) {
+        mapaOrigenMandado = L.map('mapa-mandado-origen').setView(COORDS_NUEVA_SANTA_ROSA, 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaOrigenMandado);
+
+        mapaOrigenMandado.on('click', (e) => {
+            coordsOrigenMandado = { lat: e.latlng.lat, lng: e.latlng.lng };
+            if (!marcadorOrigenMandado) {
+                marcadorOrigenMandado = L.marker([e.latlng.lat, e.latlng.lng], { draggable: true }).addTo(mapaOrigenMandado);
+                marcadorOrigenMandado.on('dragend', (ev) => {
+                    const p = ev.target.getLatLng();
+                    coordsOrigenMandado = { lat: p.lat, lng: p.lng };
+                });
+            } else {
+                marcadorOrigenMandado.setLatLng([e.latlng.lat, e.latlng.lng]);
+            }
+        });
+    }
+    setTimeout(() => { if (mapaOrigenMandado) mapaOrigenMandado.invalidateSize(); }, 200);
+}
+
+function inicializarMapaMandadoDestino() {
+    const container = document.getElementById('mapa-mandado-destino');
+    if (!container || typeof L === 'undefined') return;
+
+    if (!mapaDestinoMandado) {
+        mapaDestinoMandado = L.map('mapa-mandado-destino').setView(COORDS_NUEVA_SANTA_ROSA, 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapaDestinoMandado);
+
+        mapaDestinoMandado.on('click', (e) => {
+            coordsDestinoMandado = { lat: e.latlng.lat, lng: e.latlng.lng };
+            if (!marcadorDestinoMandado) {
+                marcadorDestinoMandado = L.marker([e.latlng.lat, e.latlng.lng], { draggable: true }).addTo(mapaDestinoMandado);
+                marcadorDestinoMandado.on('dragend', (ev) => {
+                    const p = ev.target.getLatLng();
+                    coordsDestinoMandado = { lat: p.lat, lng: p.lng };
+                });
+            } else {
+                marcadorDestinoMandado.setLatLng([e.latlng.lat, e.latlng.lng]);
+            }
+        });
+    }
+    setTimeout(() => { if (mapaDestinoMandado) mapaDestinoMandado.invalidateSize(); }, 200);
+}
+
 function verDetalleCarrito() {
     const contenedorLista = document.getElementById('carrito-lista');
     const seccionDatos = document.getElementById('seccion-datos');
@@ -867,22 +1005,27 @@ async function enviarAWhatsApp() {
     const cobrarProducto = esEfectivo ? 'si' : 'no';
     let detalleContenido = carrito.map(item => `${item.cantidad}x ${item.nombre}`).join(', ');
 
-    // Estructura para sincronizar con el panel del gestor/conductor
+    let mapaUrl = coordsUbicacionCliente 
+        ? `https://maps.google.com/?q=${coordsUbicacionCliente.lat},${coordsUbicacionCliente.lng}`
+        : '';
+
+    // Estructura sincronizada con el panel del gestor/conductor
     const nuevaOrdenFirebase = {
         id: Math.floor(1000 + Math.random() * 9000).toString(),
         date: `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`,
         timestamp: Date.now(),
         client: nombre,
-        address: `${direccion} (${zonaSeleccionada})`,
+        address: `${direccion} (${zonaSeleccionada})${mapaUrl ? ' | Ubicación: ' + mapaUrl : ''}`,
         restaurant: restNombre,
         description: detalleContenido,
         notes: referencia ? `Ref: ${referencia} | Pago: ${formaPago}` : `Pago: ${formaPago}`,
         productPrice: totalFinal,
         productCollect: cobrarProducto,
-        shippingPrice: precioEnvioBase, // Tarifa oficial extraída de tu tabla
+        shippingPrice: precioEnvioBase,
         payer: 'cliente',
         driver: 'TODOS', 
-        status: 'Pendiente'
+        status: 'Pendiente',
+        coordenadas: coordsUbicacionCliente || null
     };
 
     try {
@@ -898,6 +1041,9 @@ async function enviarAWhatsApp() {
     mensaje += `🏪 *Negocio:* ${restNombre}\n`;
     mensaje += `👤 *Cliente:* ${nombre}\n`;
     mensaje += `📍 *Dirección:* ${direccion} (${zonaSeleccionada})\n`;
+    if (mapaUrl) {
+        mensaje += `🗺️ *Ubicación Mapa GPS:* ${mapaUrl}\n`;
+    }
     if (referencia) {    
         mensaje += `🏠 *Referencia:* ${referencia}\n`;
     }
@@ -940,6 +1086,7 @@ window.cerrarModalCarrito = cerrarModalCarrito;
 window.enviarAWhatsApp = enviarAWhatsApp;
 window.cambiarSubcategoria = cambiarSubcategoria;
 window.actualizarCostoEnvioRestaurante = actualizarCostoEnvioRestaurante;
+window.capturarGPSCliente = capturarGPSCliente;
 
 window.addEventListener('DOMContentLoaded', () => {
     history.replaceState({ vista: 'panel-inicio' }, '', '#inicio');
@@ -1047,7 +1194,13 @@ function abrirSeccionMandados() {
         seccionMandados.style.display = 'block';
     }
 
+    controlarVisibilidadBarraCarrito(false);
     history.pushState({ vista: 'mandados' }, '', '#mandados');
+
+    setTimeout(() => {
+        inicializarMapaMandadoOrigen();
+        inicializarMapaMandadoDestino();
+    }, 300);
 }
 
 // Evaluar si se selecciona hora programada
@@ -1129,9 +1282,12 @@ async function enviarMandadoAWhatsApp(e) {
 
     const codigoMandado = "MND-" + Math.floor(1000 + Math.random() * 9000);
 
-    // Guardar en Firebase Realtime Database para que aparezca en el panel del Gestor
+    let urlOrigenMap = coordsOrigenMandado ? `https://maps.google.com/?q=${coordsOrigenMandado.lat},${coordsOrigenMandado.lng}` : '';
+    let urlDestinoMap = coordsDestinoMandado ? `https://maps.google.com/?q=${coordsDestinoMandado.lat},${coordsDestinoMandado.lng}` : '';
+
+    // Guardar en Firebase con la clave exacta que lee el gestor ('paqueteria_mandados')
     try {
-        const mandadosRef = ref(db, 'Paqueteria_mandados');
+        const mandadosRef = ref(db, 'paqueteria_mandados');
         await push(mandadosRef, {
             codigo: codigoMandado,
             clienteNombre: nombre,
@@ -1139,11 +1295,13 @@ async function enviarMandadoAWhatsApp(e) {
             zona: zonaElegida,
             shippingPrice: tarifaMandadoFinal,
             modalidad: modalidadEntregaTxt,
-            origen: origen,
-            destino: destino,
+            origen: origen + (urlOrigenMap ? ` | GPS Origen: ${urlOrigenMap}` : ''),
+            destino: destino + (urlDestinoMap ? ` | GPS Destino: ${urlDestinoMap}` : ''),
             detalle: detalle,
             fechaSolicitud: new Date().toISOString(),
-            estado: "Pendiente de Cotización"
+            estado: "Pendiente de Cotización",
+            coordenadasOrigen: coordsOrigenMandado || null,
+            coordenadasDestino: coordsDestinoMandado || null
         });
     } catch (error) {
         console.error("Error guardando mandado en BD:", error);
@@ -1156,9 +1314,11 @@ async function enviarMandadoAWhatsApp(e) {
     mensaje += `📍 *Zona / Destino:* ${zonaElegida}\n`;
     mensaje += `💵 *Tarifa Estimada (Base + Q4):* Q${tarifaMandadoFinal}.00\n`;
     mensaje += `⏰ *Modalidad:* ${modalidadEntregaTxt}\n\n`;
-    mensaje += `📍 *Punto de Recolección (Origen):*\n${origen}\n\n`;
-    mensaje += `🏠 *Punto de Entrega (Destino):*\n${destino}\n\n`;
-    mensaje += `📦 *Detalle del Paquete:*\n${detalle}\n\n`;
+    mensaje += `📍 *Punto de Recolección (Origen):*\n${origen}\n`;
+    if (urlOrigenMap) mensaje += `🗺️ *GPS Origen:* ${urlOrigenMap}\n`;
+    mensaje += `\n🏠 *Punto de Entrega (Destino):*\n${destino}\n`;
+    if (urlDestinoMap) mensaje += `🗺️ *GPS Destino:* ${urlDestinoMap}\n`;
+    mensaje += `\n📦 *Detalle del Paquete:*\n${detalle}\n\n`;
     mensaje += `✅ *Aceptó normas:* Sí\n\n`;
     mensaje += `¡Quedo a la espera de la confirmación!`;
 
