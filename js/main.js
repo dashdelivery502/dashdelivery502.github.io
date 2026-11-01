@@ -138,8 +138,8 @@ const menus = {
         { nombre: "Combo 1 Pieza (1Papas + 1Ensalada)", precio: 20, descripcion: "Pieza de pollo crujiente + papas fritas y ensalada", imagen: "https://static.vecteezy.com/system/resources/previews/073/675/187/large_2x/fried-chicken-and-french-fries-free-png.png", subcat:"menus" },
         { nombre: "Combo 2 Piezas (1Papas + 1Ensalada)", precio: 30, descripcion: "Dos piezas de pollo acompañadas de 1 porcion de papas fritas y 1 ensalada.", imagen: "https://tse3.mm.bing.net/th/id/OIP.vuytQ9IbZyLeWM6A5BoakwHaF0?r=0&w=1920&h=1510&rs=1&pid=ImgDetMain&o=7&rm=3", subcat:"menus" },
         { nombre: "Combo 3 Piezas (1Papas + 1Ensalada)", precio: 37, descripcion: "Tres piezas de pollo frito con 1 porcion de papa y 1 ensalada", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300",subcat:"menus" },
-        { nombre: "combo 5 piezas (2ensaladas + 2papas", precio: 5, descripcion: "5 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
-        { nombre: "combo 8 piezas(3ensaladas + 3papas)", precio: 5, descripcion: "8 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
+        { nombre: "combo 5 piezas (2ensaladas + 2papas", precio: 70, descripcion: "5 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
+        { nombre: "combo 8 piezas(3ensaladas + 3papas)", precio: 100, descripcion: "8 piezas de pollo (no pechuga)", imagen: "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=300", subcat:"menus" },
         { nombre: "1 Papa", precio: 7, descripcion: "Complemento extra individual", imagen: "https://static.vecteezy.com/system/resources/previews/059/482/403/non_2x/crispy-golden-french-fries-served-in-a-red-container-for-a-delicious-fast-food-snack-french-fries-food-fast-food-snack-isolated-lunch-take-out-free-png.png",subcat:"complementos" },
         { nombre: "1 Ensalada", precio: 7, descripcion: "Complemento extra individual.", imagen: "https://media-cdn.grubhub.com/image/upload/d_search:browse-images:default.jpg/w_150,q_auto:low,fl_lossy,dpr_2.0,c_fill,f_auto,h_150/bfubmka0kj0j23n1ndnx", subcat:"complementos" },
         { nombre: "Papas Locas", precio: 15, descripcion: "Papas fritas con salsa y mayonesa", imagen: "https://lh7-rt.googleusercontent.com/docsz/AD_4nXcnibWid62HSACJCV9jl2pbaLD0xj-XybCaS6AR_GCix25V9xBbEWNMVPOjuIXDH10_7XAyAlFa5Au3GsMv27ZjVVArSq7hwomRSM-j1Bt37dUKXuc82mXF7h_lQOq_O_POXPtKvg?key=ls6I_YEY3fzKA7j1A3GHLg", subcat:"complementos" },
@@ -386,7 +386,7 @@ function cambiarVista(nuevaVista, push = true) {
     } else if (nuevaVista === 'mandados') {
         if (seccionMandados) seccionMandados.style.display = 'block';
         modalCarrito.style.display = 'none';
-        controlarVisibilidadBarraCarrito(false); // Ocultar barra flotante en Mandados
+        controlarVisibilidadBarraCarrito(false);
     } else if (nuevaVista === 'carrito') {
         if (vistaActual === 'menu') seccionMenu.style.display = 'block';
         else if (vistaActual === 'mandados' && seccionMandados) seccionMandados.style.display = 'block';
@@ -398,6 +398,7 @@ function cambiarVista(nuevaVista, push = true) {
         setTimeout(inicializarMapaModalCliente, 300);
     }
 
+    // Evitamos duplicar el estado actual en el historial para que no se atascque
     if (push && vistaActual !== nuevaVista) {
         history.pushState({ vista: nuevaVista }, '', `#${nuevaVista}`);
     }
@@ -408,6 +409,14 @@ function cambiarVista(nuevaVista, push = true) {
 }
 
 window.addEventListener('popstate', (e) => {
+    // Si el usuario cierra el modal del carrito primero si está abierto
+    const modalCarrito = document.getElementById('modal-carrito');
+    if (modalCarrito && modalCarrito.style.display === 'flex') {
+        modalCarrito.style.display = 'none';
+        cambiarVista(vistaActual, false);
+        return;
+    }
+
     if (e.state && e.state.vista) {
         cambiarVista(e.state.vista, false);
     } else {
@@ -548,7 +557,7 @@ function renderizarProductosBuscados(productos) {
                             ${etiquetaProdHtml}
                             <h4 style="font-size: 14px; margin: 0 0 4px 0;">${prod.nombre}</h4>
                             ${descHtml}${opcionesHtml}
-                            <p style="font-weight: bold; color: #333; margin: 6px 0 0 0;">Q${prod.precio}.00</p>
+                            <p style="font-weight: bold; color: #333; margin: 6px 0 0 0;">Q${Number(prod.precio).toFixed(2)}</p>
                         </div>
                     </div>
                 </div>
@@ -703,7 +712,7 @@ function renderizarMenuConSubcategorias(nombreRestaurante) {
                     </div>
                 </div>
                 <div class="producto-footer">
-                    <p>Q${prod.precio}.00</p>
+                    <p>Q${Number(prod.precio).toFixed(2)}</p>
                     <button class="btn-agregar" onclick="agregarConOpcion('${prod.nombre}', ${prod.precio}, ${indexReal})">+</button>
                 </div>
             </div>
@@ -770,7 +779,7 @@ function actualizarTotal() {
     let total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     let cantidadTotal = carrito.reduce((sum, item) => sum + item.cantidad, 0);
 
-    document.getElementById('total-txt').innerText = `Q${total}.00`;
+    document.getElementById('total-txt').innerText = `Q${total.toFixed(2)}`;
     document.getElementById('cant-txt').innerText = cantidadTotal;
 }
 
@@ -787,20 +796,51 @@ function actualizarCostoEnvioRestaurante() {
     if (!selectZona) return;
     
     const opcionSeleccionada = selectZona.options[selectZona.selectedIndex];
-    const precioEnvio = parseFloat(opcionSeleccionada.getAttribute('data-precio')) || 0;
+    let precioEnvioBase = parseFloat(opcionSeleccionada.getAttribute('data-precio')) || 0;
     const boxEnvio = document.getElementById('info-envio-box');
 
+    // Obtener el restaurante del carrito actual
     const restNombre = carrito.length > 0 ? carrito[0].restaurante : "";
-    const esGratis = infoRestaurantes[restNombre] ? infoRestaurantes[restNombre].envioGratis : false;
+    const datosNegocio = infoRestaurantes[restNombre] || {};
+    const esGratis = datosNegocio.envioGratis || false;
+
+    // Calcular el subtotal actual de los productos en el carrito
+    let subtotalProductos = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+
+    // Extraer el mínimo de consumo del texto informativo del restaurante (si aplica)
+    // Ejemplo: "envio gratis aplica desde Q55 en casco urbano"
+    let cumpleEnvioGratis = false;
+    if (esGratis && datosNegocio.mensajeInfo) {
+        const matches = datosNegocio.mensajeInfo.match(/desde\s+Q(\d+)/i);
+        if (matches && matches[1]) {
+            let minimoRequerido = parseFloat(matches[1]);
+            if (subtotalProductos >= minimoRequerido) {
+                cumpleEnvioGratis = true;
+            }
+        }
+    }
+
+    // Si cumple con el mínimo, el envío se vuelve 0
+    let precioEnvioFinal = cumpleEnvioGratis ? 0 : precioEnvioBase;
 
     if (boxEnvio) {
         if (esGratis) {
-            boxEnvio.innerHTML = `<strong>Tarifa Oficial (${selectZona.value}):</strong> Q${precioEnvio}.00 (Aplica envío gratis si cumples el mínimo de consumo del comercio).`;
+            if (cumpleEnvioGratis) {
+                boxEnvio.innerHTML = `<strong>¡Envío Gratis Aplicado! 🎉</strong> LLegaste al mínimo de consumo para ${restNombre}.`;
+                boxEnvio.style.borderLeft = "4px solid #28a745";
+            } else {
+                boxEnvio.innerHTML = `<strong>Tarifa Oficial (${selectZona.value}):</strong> Q${precioEnvioBase}.00 <br><small style="color:#d9534f;">💡 ${datosNegocio.mensajeInfo}</small>`;
+                boxEnvio.style.borderLeft = "4px solid #FF6600";
+            }
         } else {
-            boxEnvio.innerHTML = `<strong>Tarifa Oficial de Envío para ${selectZona.value}:</strong> Q${precioEnvio}.00`;
+            boxEnvio.innerHTML = `<strong>Tarifa Oficial de Envío para ${selectZona.value}:</strong> Q${precioEnvioBase}.00`;
+            boxEnvio.style.borderLeft = "4px solid #FF6600";
         }
         boxEnvio.style.display = 'block';
     }
+
+    // Retornamos el precio de envío final ya evaluado para usarlo al enviar el pedido
+    return precioEnvioFinal;
 }
 
 // ==========================================
@@ -933,7 +973,7 @@ function verDetalleCarrito() {
             <div class="cart-item">
                 <div>
                     <strong>${item.nombre}</strong><br>
-                    <small style="color:#666;">${item.restaurante} - Q${subtotal}.00</small>
+                    <small style="color:#666;">${item.restaurante} - Q${subtotal.toFixed(2)}</small>
                 </div>
                 <div class="cant-controles">
                     <button class="btn-cant" onclick="cambiarCantidad(${index}, -1)">-</button>
@@ -1054,7 +1094,7 @@ async function enviarAWhatsApp() {
         mensaje += `• ${item.cantidad}x ${item.nombre} (Q${(item.precio * item.cantidad).toFixed(2)})\n`;
     });
 
-    mensaje += `\n💰 *Subtotal Productos:* Q${subtotal}.00\n`;
+    mensaje += `\n💰 *Subtotal Productos:* Q${subtotal.toFixed(2)}\n`;
     
     if (descuento > 0) {
         mensaje += `🏷️ *Descuento (Cupón):* -Q${descuento}.00\n`;
