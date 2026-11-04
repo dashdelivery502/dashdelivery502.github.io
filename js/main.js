@@ -192,7 +192,9 @@ const menus = {
         { nombre: "costilla con cuero", precio: 34, descripcion: "Media libra de crujiente costilla, incluye jalapeño y cebolla", imagen: "img/costilla1.webp",subcat:"menus" },
         { nombre: "chicharron 1 libra", precio: 67, descripcion: "Delicioso chicharrón con jalapeño y cebolla", imagen: "img/chicharron1.webp",subcat:"menus" },
         { nombre: "Costilla con cuero 1LB", precio: 67, descripcion: "1lb de crujiente costilla, incluye jalapeño y cebolla", imagen: "img/costilla1.webp" ,subcat:"menus"},
-        { nombre: "1 litro de Pepsi", precio: 8,etiqueta: "disponible muy pronto", descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp",subcat:"bebidas" },
+        { nombre: "1/2 de carnitas", precio: 33, descripcion: "incluye jalapeño y cebolla", imagen: "img/" ,subcat:"menus"},
+        { nombre: "1LB de carnitas", precio: 65, descripcion: "incluye jalapeño y cebolla", imagen: "img/" ,subcat:"menus"},
+        { nombre: "1 litro de Pepsi", precio: 8, descripcion: "Botella helada de 1 litro.", imagen: "img/pepsi.webp",subcat:"bebidas" },
         { nombre: "Rabano picado", precio: 12, descripcion: "picado para complementar nuestro menu", imagen: "img/rabano.webp",subcat:"complementos" },
         { nombre: "Chile escabeche", precio: 12, descripcion: "nuestra deliciosa receta de chile", imagen: "img/escabeche.webp",subcat:"complementos" },
         { nombre: "Agua pura jirai", precio: 5, descripcion: "pura y refrescante", imagen: "img/jirai.webp",subcat:"bebidas" },
@@ -622,7 +624,18 @@ function cambiarSubcategoria(subcat) {
 function abrirMenu(nombreRestaurante) {
     restauranteActual = nombreRestaurante;
     document.getElementById('titulo-restaurante').textContent = nombreRestaurante;
-    subcategoriaActiva = 'menus';
+    
+    // Lee los productos y detecta automáticamente las subcategorías asignadas
+    const productos = menus[nombreRestaurante] || [];
+    const subcatsSet = new Set();
+    
+    productos.forEach(prod => {
+        const sub = prod.subcat || obtenerSubcategoria(prod);
+        if (sub) subcatsSet.add(sub);
+    });
+
+    const listaSubcats = Array.from(subcatsSet);
+    subcategoriaActiva = listaSubcats.length > 0 ? listaSubcats[0] : 'todos';
 
     const infoBox = document.getElementById("info-negocio-box");
     const datosNegocio = infoRestaurantes[nombreRestaurante];
@@ -669,32 +682,44 @@ function renderizarMenuConSubcategorias(nombreRestaurante) {
     }
 
     const productos = menus[nombreRestaurante] || [];
-    const esRestaurante = negociosPorCategoria["restaurantes"] && 
-                          negociosPorCategoria["restaurantes"].some(t => t.nombre === nombreRestaurante);
+    const subcatsSet = new Set();
+    
+    productos.forEach(prod => {
+        const sub = prod.subcat || obtenerSubcategoria(prod);
+        if (sub) subcatsSet.add(sub);
+    });
 
-    if (esRestaurante) {
+    const listaSubcats = Array.from(subcatsSet);
+
+    // Si el negocio tiene más de 1 subcategoría, genera las pestañas automáticamente de texto limpio
+    if (listaSubcats.length > 1) {
         tabsContainer.style.display = "block";
-        tabsContainer.innerHTML = `
-            <div class="subcategorias-tabs">
-                <button class="tab-subcat ${subcategoriaActiva === 'menus' ? 'active' : ''}" onclick="cambiarSubcategoria('menus')">🍽️ Menús</button>
-                <button class="tab-subcat ${subcategoriaActiva === 'bebidas' ? 'active' : ''}" onclick="cambiarSubcategoria('bebidas')">🥤 Bebidas</button>
-                <button class="tab-subcat ${subcategoriaActiva === 'complementos' ? 'active' : ''}" onclick="cambiarSubcategoria('complementos')">🍟 Complementos</button>
-            </div>
-        `;
+        
+        let htmlTabs = '<div class="subcategorias-tabs">';
+        listaSubcats.forEach(sub => {
+            const esActiva = subcategoriaActiva === sub ? 'active' : '';
+            let nombreFormateado = sub.replace(/_/g, ' ').replace(/-/g, ' ');
+            nombreFormateado = nombreFormateado.charAt(0).toUpperCase() + nombreFormateado.slice(1);
+
+            htmlTabs += `<button class="tab-subcat ${esActiva}" onclick="cambiarSubcategoria('${sub}')">${nombreFormateado}</button>`;
+        });
+        htmlTabs += '</div>';
+
+        tabsContainer.innerHTML = htmlTabs;
     } else {
         tabsContainer.style.display = "none";
         tabsContainer.innerHTML = "";
     }
 
-    const productosFiltrados = esRestaurante 
-        ? productos.filter(prod => obtenerSubcategoria(prod) === subcategoriaActiva)
+    const productosFiltrados = (listaSubcats.length > 1 && subcategoriaActiva !== 'todos')
+        ? productos.filter(prod => (prod.subcat || obtenerSubcategoria(prod)) === subcategoriaActiva)
         : productos;
 
     const contenedor = document.getElementById('lista-productos');
     contenedor.innerHTML = "";
 
     if (productosFiltrados.length === 0) {
-        contenedor.innerHTML = `<p style="text-align:center; grid-column: 1/-1; padding: 30px; color: #666;">No hay elementos en esta sección.</p>`;
+        contenedor.innerHTML = `<p style="text-align:center; grid-column: 1/-1; padding: 30px; color: #666;">No hay elementos en esta categoría.</p>`;
         return;
     }
 
