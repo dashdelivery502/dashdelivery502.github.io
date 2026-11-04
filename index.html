@@ -104,15 +104,18 @@
 
         <!-- Menú / Catálogo de Productos -->
         <div id="seccion-menu" class="menu-seccion">
-            <button class="btn-volver" onclick="volverANegocios()">← Volver </button>
             
-            <!-- Logo/Imagen superior del negocio -->
-            <div id="banner-negocio-container" style="text-align: center; margin-bottom: 15px;">
-                <img id="img-banner-negocio" src="" alt="Logo del Negocio" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 16px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <!-- Portada del negocio con Botón Volver, Imagen a pantalla completa y Título superpuesto -->
+            <div id="banner-negocio-container">
+                <button class="btn-volver" onclick="volverANegocios()">← Volver </button>
+                <img id="img-banner-negocio" src="" alt="Logo del Negocio">
+                <h2 id="titulo-restaurante">Menú</h2>
             </div>
 
-            <h2 id="titulo-restaurante" class="seccion-titulo" style="text-align: center;">Menú</h2>
+            <!-- Horarios e información importante del negocio -->
             <div id="info-negocio-box" class="info-negocio-box" style="display: none;"></div>
+            
+            <!-- Lista de productos -->
             <div id="lista-productos"></div>
         </div>
     </div>

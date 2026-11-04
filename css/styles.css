@@ -11,9 +11,6 @@ body {
     padding-bottom: 90px;
 }
 
-/* ==========================================
-   ENCABEZADO NARANJA DISTINTIVO Y MÁS COMPACTO
-   ========================================== */
 header {
     background: linear-gradient(135deg, #FF6600, #E05500);
     color: white;
@@ -31,12 +28,9 @@ header h1 {
     letter-spacing: -0.5px;
 }
 
-/* ==========================================
-   BARRA DE BÚSQUEDA DELGADA Y PEGADA AL HEADER
-   ========================================== */
 .banner-publicidad {
     background-color: transparent;
-    padding: 6px 20px 10px 20px;
+    padding: 8px 16px 10px 16px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,8 +59,8 @@ header h1 {
 
 .container {
     max-width: 600px;
-    margin: 5px auto;
-    padding: 0 20px;
+    margin: 0 auto;
+    padding: 0 16px;
 }
 
 .seccion-titulo {
@@ -77,9 +71,6 @@ header h1 {
     letter-spacing: -0.3px;
 }
 
-/* ==========================================
-   CATEGORÍAS: FOTO A PANTALLA COMPLETA + TEXTO TRANSPARENTE
-   ========================================== */
 .grid-panel-inicio {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -130,9 +121,6 @@ header h1 {
     text-align: center;
 }
 
-/* ==========================================
-   TARJETAS DE RESTAURANTES: FOTO A CUADRO COMPLETO
-   ========================================== */
 .grid-restaurantes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -226,9 +214,6 @@ header h1 {
     color: #c2410c;
 }
 
-/* ==========================================
-   BOTÓN VOLVER SECUNDARIO
-   ========================================== */
 .btn-volver {
     background: transparent;
     color: #64748b;
@@ -251,35 +236,124 @@ header h1 {
 .menu-seccion {
     display: none;
     background: white;
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 0 0 20px 20px;
+    padding: 0 16px 20px 16px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.04);
     margin-bottom: 20px;
 }
 
 #banner-negocio-container {
-    text-align: center;
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
     margin-bottom: 15px;
+    overflow: hidden;
+    height: 220px;
+    background-color: #111;
 }
 
 #img-banner-negocio {
     width: 100%;
-    max-height: 180px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 16px;
     display: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+#banner-negocio-container::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.menu-seccion .btn-volver {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.menu-seccion .btn-volver:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.03);
 }
 
 #titulo-restaurante {
-    text-align: center;
-    color: #0F4C3A;
-    margin-bottom: 15px;
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    right: 16px;
+    z-index: 10;
+    color: #ffffff;
+    font-size: 1.35rem;
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    margin: 0;
+    text-align: left;
+    letter-spacing: -0.3px;
 }
 
-/* ==========================================
-   CUADRÍCULA DE PRODUCTOS
-   ========================================== */
+.info-negocio-box {
+    background-color: #FFF2ED;
+    color: #c2410c;
+    border: 1px solid #FFD0BA;
+    border-left: 4px solid #FF6600;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 0 0 15px 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.4;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.subcategorias-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    scrollbar-width: none;
+}
+
+.subcategorias-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-subcat {
+    background: #f1ede4;
+    color: #0F4C3A;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.tab-subcat.active {
+    background: #0F4C3A;
+    color: white;
+    box-shadow: 0 4px 12px rgba(15, 76, 58, 0.25);
+}
+
 #lista-productos {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -372,42 +446,6 @@ header h1 {
     background: #E05500;
 }
 
-/* Pestañas de Subcategorías */
-.subcategorias-tabs {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
-    scrollbar-width: none;
-}
-
-.subcategorias-tabs::-webkit-scrollbar {
-    display: none;
-}
-
-.tab-subcat {
-    background: #f1ede4;
-    color: #0F4C3A;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
-}
-
-.tab-subcat.active {
-    background: #0F4C3A;
-    color: white;
-    box-shadow: 0 4px 12px rgba(15, 76, 58, 0.25);
-}
-
-/* ==========================================
-   BARRA INFERIOR TRANSLÚCIDA (EFECTO CRISTAL)
-   ========================================== */
 .carrito-bar {
     position: fixed;
     bottom: 12px;
@@ -457,9 +495,6 @@ header h1 {
     transform: scale(1.02);
 }
 
-/* ==========================================
-   MODAL Y CARRITO
-   ========================================== */
 .modal {
     display: none;
     position: fixed;
@@ -632,24 +667,6 @@ header h1 {
     transform: translateY(-2px);
 }
 
-.info-negocio-box {
-    background-color: #e6f4ea;
-    color: #004d40;
-    border: 1px solid #a3e0c0;
-    border-radius: 10px;
-    padding: 10px 15px;
-    margin: 10px auto 15px auto;
-    font-size: 14px;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1.4;
-    max-width: 90%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* ==========================================
-   ESTILOS ENCARGOS Y MANDADOS
-   ========================================== */
 .banner-mandados-promo {
     background: linear-gradient(135deg, #0F4C3A, #186e55);
     color: white;

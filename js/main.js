@@ -332,7 +332,18 @@ const menus = {
         { nombre: "zapatera multiusos", precio: 115, descripcion: "tubos de metal, uniones de plastico, divisiones de tela", imagen: "img/zapatera.webp" },
         { nombre: "Banda terapeutica", precio: 205, descripcion: "brinda masajes termicos en hombros,codos,rodillas y piernas", imagen: "img/bandas.webp" },
         { nombre: "Bascula portatil", precio: 49, descripcion: "ideal para pesar maletas de viajes u otros", imagen: "img/pesa.webp" },
-        { nombre: "Saran para sombra", precio: 105, descripcion: "3x4 metros. 80% sombra, incluye ojales para facilitar instalacion", imagen: "img/saran.webp" }
+        { nombre: "Saran para sombra", precio: 105, descripcion: "3x4 metros. 80% sombra, incluye ojales para facilitar instalacion", imagen: "img/saran.webp" },
+        { nombre: "Rack para TV", precio: 125, descripcion: "soporte con movimiento para tv de 26 a 55 pulgadas", imagen: "img/rack.webp" },
+        { nombre: "Cortina Magnetica", precio: 59, descripcion: "ideal para puerta, medida de 210cm de alto x 100cmde ancho. Evita mosquitos, cuenta con imanes para cierre automatico", imagen: "img/cortina.webp" },
+        { nombre: "Caja Organizadora", precio: 25, descripcion: "25cm de ancho x 15cm de alto. Material de tel ay carton ecologico", imagen: "img/cajao.webp" },
+        { nombre: "Tenciometro Portatil", precio: 105, descripcion: "Producto electrico de baterias. No incluye cable ni baterias", imagen: "img/tensiometro.webp" },
+        { nombre: "Monedero", precio: 25, descripcion: "3 compartimientos, cierre metalico y diseño de cuero sintetico", imagen: "img/monedero.webp" },
+        { nombre: "set de cuchillos", precio: 37, descripcion: "6 piezas de cuchillo,tijera y pelador", imagen: "img/set.webp" },
+        { nombre: "Estrella Navideña", precio: 33, descripcion: "Bajo consumo. Medida de 21cm", imagen: "img-estrella.webp" },
+        { nombre: "Rollo de luces", precio: 145, descripcion: "rollo multicolor de 50 metros", imagen: "img/" },
+        { nombre: "Alfombra Navideña", precio: 30, descripcion: "Para entrada o dormitorio. Medida de 40cmx60cm ", imagen: "img/alfombra1.webp" },
+        { nombre: "Alfombra Navideña", precio: 30, descripcion: "para entrada o dormitorio. Medida de 40cmx60cm", imagen: "img/alfombra2.webp" },
+        { nombre: "Alfombra Navideña", precio: 30, descripcion: "para entrada o dormitorio. Medida de 40cmx60cm", imagen: "img/alfombra3.webp" }
     ]
 };
 
@@ -365,6 +376,7 @@ function cambiarVista(nuevaVista, push = true) {
     const seccionMenu = document.getElementById('seccion-menu');
     const modalCarrito = document.getElementById('modal-carrito');
     const seccionMandados = document.getElementById('seccion-mandados');
+    const headerPrincipal = document.querySelector('header'); // Selector de la barra superior
 
     if (seccionMandados) seccionMandados.style.display = 'none';
     panelPrincipal.style.display = 'none';
@@ -373,18 +385,22 @@ function cambiarVista(nuevaVista, push = true) {
 
     if (nuevaVista === 'panel-inicio') {
         panelPrincipal.style.display = 'block';
+        if (headerPrincipal) headerPrincipal.style.display = 'block'; // Visible en inicio
         modalCarrito.style.display = 'none';
         controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'restaurantes') {
         seccionRestaurantes.style.display = 'block';
+        if (headerPrincipal) headerPrincipal.style.display = 'block'; // Visible en lista de negocios
         modalCarrito.style.display = 'none';
         controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'menu') {
         seccionMenu.style.display = 'block';
+        if (headerPrincipal) headerPrincipal.style.display = 'none'; // OCULTO dentro del restaurante
         modalCarrito.style.display = 'none';
         controlarVisibilidadBarraCarrito(true);
     } else if (nuevaVista === 'mandados') {
         if (seccionMandados) seccionMandados.style.display = 'block';
+        if (headerPrincipal) headerPrincipal.style.display = 'block';
         modalCarrito.style.display = 'none';
         controlarVisibilidadBarraCarrito(false);
     } else if (nuevaVista === 'carrito') {
@@ -398,7 +414,6 @@ function cambiarVista(nuevaVista, push = true) {
         setTimeout(inicializarMapaModalCliente, 300);
     }
 
-    // Evitamos duplicar el estado actual en el historial para que no se atascque
     if (push && vistaActual !== nuevaVista) {
         history.pushState({ vista: nuevaVista }, '', `#${nuevaVista}`);
     }
